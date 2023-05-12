@@ -1,0 +1,19 @@
+.btnWrapper p {
+  margin: 1rem;
+}
+
+.btn {
+  background-color: hsl(var(--fg-hsl), 80%);
+  color: hsl(var(--bg-hsl));
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  font-size: medium;
+  border: none;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: hsl(var(--fg-hsl));
+}

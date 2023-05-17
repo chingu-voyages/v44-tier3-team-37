@@ -2,10 +2,13 @@ import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import s from '@/styles/Home.module.css'
 import LoginBtn from '@/components/login-btn'
+import { useSession } from 'next-auth/react'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+  const { data: session } = useSession()
+
   return (
     <>
       <Head>

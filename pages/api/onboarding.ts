@@ -1,24 +1,44 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "@/lib/prisma";
-import { getSession } from "next-auth/react";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { isOrg } = req.body;
+  const { isOrg, orgName, orgDesc } = req.body;
+  const session = await getServerSession(req, res, authOptions);
 
-  const session = await getSession({ req });
   if (session) {
-    const result = await prisma.user.update({
-      where: {
-        id: session?.user?.id,
-      },
-      data: {
-        isOrganization: isOrg ? "ORG" : "USER",
-      },
-    });
-    res.json(result);
+    // update user role
+    if (isOrg) {
+      const updateUser = await prisma.user.update({
+        where: {
+          id: session.user?.id,
+        },
+        data: {
+          role: "ORG",
+          organization: {
+            create: {
+              name: orgName,
+              description: orgDesc,
+            },
+          },
+        },
+      });
+      res.json(updateUser);
+    } else {
+      const updateUser = await prisma.user.update({
+        where: {
+          id: session.user?.id,
+        },
+        data: {
+          role: "USER",
+        },
+      });
+      res.json(updateUser);
+    }
   } else {
     res.status(401).send({ message: "Unauthorized" });
   }

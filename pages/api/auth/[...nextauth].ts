@@ -17,8 +17,16 @@ export const authOptions = {
       user: any;
     }) => {
       if (session?.user) {
+        // get User's role
+        const sessionUser = await prisma.user.findUnique({
+          where: {
+            id: user.id,
+          },
+        });
+
+        // add id and role to session
         session.user.id = user.id;
-        console.log(session);
+        session.user.role = sessionUser?.role;
       }
       return session;
     },
@@ -30,7 +38,7 @@ export const authOptions = {
     }),
   ],
   pages: {
-    newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
+    newUser: "/auth/new-user", // New users will be directed here on first sign in
   },
 };
 export default NextAuth(authOptions);

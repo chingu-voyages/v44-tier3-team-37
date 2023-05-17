@@ -27,6 +27,9 @@ export default function Home() {
       <main className={`${s.main} ${inter.className}`}>
         <h1 className={inter.className}>Home</h1>
         <LoginBtn />
+        {session?.user ? (
+          <p>You are signed in as a {session.user.role}</p>
+        ) : null}
       </main>
     </>
   );

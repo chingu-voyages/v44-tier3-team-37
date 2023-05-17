@@ -1,18 +1,26 @@
-import NextAuth, { DefaultSession } from 'next-auth'
+import NextAuth from "next-auth";
 
-import GoogleProvider from 'next-auth/providers/google'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
-import { prisma } from '@/prisma-client'
+import GoogleProvider from "next-auth/providers/google";
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import prisma from "@/lib/prisma";
 
 export const authOptions = {
   adapter: PrismaAdapter(prisma),
   callbacks: {
-    session: async ({ session, token, user }: { session: any; token: any; user: any }) => {
+    session: async ({
+      session,
+      token,
+      user,
+    }: {
+      session: any;
+      token: any;
+      user: any;
+    }) => {
       if (session?.user) {
-        session.user.id = user.id
-        console.log(session)
+        session.user.id = user.id;
+        console.log(session);
       }
-      return session
+      return session;
     },
   },
   providers: [
@@ -22,7 +30,7 @@ export const authOptions = {
     }),
   ],
   pages: {
-    newUser: '/auth/new-user', // New users will be directed here on first sign in (leave the property out if not of interest)
+    newUser: "/auth/new-user", // New users will be directed here on first sign in (leave the property out if not of interest)
   },
-}
-export default NextAuth(authOptions)
+};
+export default NextAuth(authOptions);

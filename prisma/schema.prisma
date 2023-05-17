@@ -6,19 +6,20 @@ datasource db {
   provider = "mongodb"
   url      = env("DATABASE_URL")
 }
+
 model Account {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId             String @db.ObjectId @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String @map("provider_account_id")
-  refresh_token      String?  @db.String
-  access_token       String?  @db.String
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String?  @db.String
-  session_state      String?
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @map("user_id") @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.String
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -27,38 +28,63 @@ model Account {
 }
 
 model Session {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique @map("session_token")
-  userId       String @db.ObjectId @map("user_id")
+  userId       String   @map("user_id") @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@map("sessions")
 }
 
 model User {
- id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id            String        @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
-  emailVerified DateTime? @map("email_verified")
+  email         String?       @unique
+  emailVerified DateTime?     @map("email_verified")
   image         String?
   accounts      Account[]
   sessions      Session[]
-  isOrganization    Role? @default(NONE)  @map("is_organization")
+  role          Role          @default(NONE) @map("is_organization")
+  organization  Organization?
+  collection    Image[]
+
   @@map("users")
 }
 
-enum Role {
-  NONE
-  USER
-  ORG
+model Organization {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  userId      String @map("user_id") @db.ObjectId
+  user        User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId])
+  @@map("organizations")
+}
+
+// placeholder Image model - to be changed
+model Image {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  userId String @map("user_id") @db.ObjectId
+  name   String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("images")
 }
 
 model VerificationToken {
-  id  String  @id @default(auto()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
   token      String   @unique
   expires    DateTime
 
   @@unique([identifier, token])
   @@map("verificationtokens")
+}
+
+enum Role {
+  NONE
+  USER
+  ORG
 }

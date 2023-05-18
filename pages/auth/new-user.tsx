@@ -2,10 +2,13 @@ import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import styles from "@/styles/New-user.module.css";
+import { Btn } from "@/components/Buttons/Buttons";
 
 export default function NewUser() {
-  const { data: session, status, update } = useSession();
+  const { data: session, update } = useSession();
   const router = useRouter();
+
   const [isOrg, setIsOrg] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [orgDesc, setOrgDesc] = useState("");
@@ -34,21 +37,35 @@ export default function NewUser() {
         <title>Welcome | Image Vault</title>
         <meta
           name="description"
-          content="Find and share images with the world."
+          content="Find and collect historical images."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main>
-        <h1>Welcome to Image Vault!</h1>
+      <div className={styles.onboarding}>
+        <h2>Welcome to Image Vault</h2>
         <form onSubmit={handleForm}>
-          <label htmlFor="role">Are you an organization?</label>
-          <input
-            id="role"
-            onChange={() => setIsOrg(!isOrg)}
-            checked={isOrg}
-            type="checkbox"
-          />
+          <div className={styles.radio}>
+            <label>
+              <input
+                type="radio"
+                name="radio"
+                onChange={() => setIsOrg(false)}
+                checked={!isOrg}
+              />
+              <span>User</span>
+            </label>
+            <label>
+              <input
+                type="radio"
+                name="radio"
+                onChange={() => setIsOrg(true)}
+                checked={isOrg}
+              />
+              <span>Organization</span>
+            </label>
+          </div>
+
           {isOrg ? (
             <>
               <label htmlFor="name">Organization name</label>
@@ -65,13 +82,15 @@ export default function NewUser() {
                 name="desc"
                 id=""
                 cols={30}
-                rows={10}
+                rows={8}
               ></textarea>
             </>
           ) : null}
-          <button>Submit</button>
+          <Btn type="submit" disabled={isOrg && (!orgName || !orgDesc)}>
+            {isOrg ? "Submit" : "Continue"}
+          </Btn>
         </form>
-      </main>
+      </div>
     </>
   );
 }

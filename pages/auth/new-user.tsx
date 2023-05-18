@@ -1,8 +1,10 @@
 import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
+import { useSession } from "next-auth/react";
 
 export default function NewUser() {
+  const { data: session, status, update } = useSession();
   const router = useRouter();
   const [isOrg, setIsOrg] = useState(false);
   const [orgName, setOrgName] = useState("");
@@ -19,6 +21,7 @@ export default function NewUser() {
         },
         body: JSON.stringify(body),
       });
+      await update({ role: isOrg ? "ORG" : "USER" });
       await router.push("/");
     } catch (error) {
       console.error(error);

@@ -3,12 +3,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
 import s from "@/styles/Home.module.css";
-import {
-  Btn,
-  BoldBtn,
-  WarningBtn,
-  OutlineWarningBtn,
-} from "@/components/Buttons/Buttons";
 
 export default function Home() {
   const router = useRouter();

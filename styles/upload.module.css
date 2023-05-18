@@ -1,0 +1,24 @@
+.upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.upload form {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.upload input {
+    margin-bottom: 5px;
+}
+
+.upload h2 {
+    margin-block: 30px;
+}
+
+.upload button {
+    margin-top: 20px;
+}

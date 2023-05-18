@@ -1,7 +1,7 @@
 import React from 'react';
 
-const userCollection: React.FC = () => {
-    
+const UserCollection: React.FC = () => {
+
 
 
 
@@ -13,4 +13,4 @@ const userCollection: React.FC = () => {
 }
 
 
-export default userCollection;
+export default UserCollection;

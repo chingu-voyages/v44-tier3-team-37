@@ -1,0 +1,37 @@
+.common {
+  color: var(--primary-color);
+  background-color: var(--tertiary-color);
+  border: 1px solid var(--tertiary-color);
+}
+.common:hover {
+  background-color: var(--tertiary-color-hover);
+  border: 1px solid var(--tertiary-color-hover);
+}
+.bold {
+  color: var(--tertiary-text);
+  background-color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+}
+.bold:hover {
+  background-color: var(--primary-color-hover);
+  border: 1px solid var(--primary-color-hover);
+}
+.warning {
+  color: var(--tertiary-text);
+  background-color: var(--warning);
+  border: 1px solid var(--warning);
+}
+.warning:hover {
+  background-color: var(--warning-hover);
+  border: 1px solid var(--warning-hover);
+}
+.outlineWarning {
+  color: var(--warning);
+  background-color: rgba(255, 255, 255, 0);
+  border: 1px solid var(--warning);
+}
+.outlineWarning:hover {
+  color: var(--tertiary-text);
+  background-color: var(--warning);
+  border: 1px solid var(--warning);
+}

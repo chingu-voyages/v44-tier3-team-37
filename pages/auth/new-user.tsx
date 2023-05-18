@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
 import styles from "@/styles/New-user.module.css";
 import { Btn } from "@/components/Buttons/Buttons";
+import LoadingSpinner from "@/components/Loading/LoadingSpinner";
 
 export default function NewUser() {
   const { data: session, update } = useSession();
@@ -13,8 +14,12 @@ export default function NewUser() {
   const [orgName, setOrgName] = useState("");
   const [orgDesc, setOrgDesc] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleForm = async (e: React.SyntheticEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+
     try {
       const body = { isOrg, orgName, orgDesc };
       await fetch(`/api/onboarding`, {
@@ -86,10 +91,14 @@ export default function NewUser() {
               ></textarea>
             </>
           ) : null}
-          <Btn type="submit" disabled={isOrg && (!orgName || !orgDesc)}>
+          <Btn
+            type="submit"
+            disabled={isLoading || (isOrg && (!orgName || !orgDesc))}
+          >
             {isOrg ? "Submit" : "Continue"}
           </Btn>
         </form>
+        {isLoading ? <LoadingSpinner /> : null}
       </div>
     </>
   );

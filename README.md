@@ -6,7 +6,7 @@ A place for museums, archives, and cultural organizations to share their collect
 - Join as a user to collect and download interesting historical images
 - Search and filter the catalog by date, location, organization, and more.
 
-Currently being developed by @LucileTech, @FlapShatner, @jameswonlee, and @dejmedus as part of an agile process with [Chingu voyages](https://www.chingu.io/)!
+Currently being developed by [@LucileTech](https://github.com/LucileTech), [@FlapShatner](https://github.com/FlapShatner), [@jameswonlee](https://github.com/jameswonlee), and [@dejmedus](https://github.com/dejmedus) as part of an agile process with [Chingu voyages](https://www.chingu.io/)!
 
 ### Built with
 

@@ -1,11 +1,8 @@
 import Head from "next/head";
-import { Inter } from "next/font/google";
-import s from "@/styles/Home.module.css";
-import LoginBtn from "@/components/login-btn";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ["latin"] });
+import s from "@/styles/Home.module.css";
 
 export default function Home() {
   const router = useRouter();
@@ -24,9 +21,8 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${s.main} ${inter.className}`}>
-        <h1 className={inter.className}>Home</h1>
-        <LoginBtn />
+      <main className={s.main}>
+        <h1>Home</h1>
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}

@@ -1,6 +1,8 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import Link from "next/link";
+import allImages from "../components/AllImages/AllImages";
 
 import s from "@/styles/Home.module.css";
 
@@ -26,6 +28,7 @@ export default function Home() {
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
+        <h2>Find your open source images</h2>
       </main>
     </>
   );

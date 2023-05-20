@@ -2,9 +2,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 1rem;
 }
 
 .upload form {
+
     margin-top: 20px;
     display: flex;
     flex-direction: column;
@@ -15,10 +17,32 @@
     margin-bottom: 5px;
 }
 
+
+.upload .inputGroup {
+    display: flex;
+    gap: 1rem;
+}
+
+.location {
+    width: 75%;
+}
+
+.upload .location,
+.upload .date {
+    display: flex;
+    flex-direction: column;
+}
+
+.upload button {
+    margin-left: auto;
+}
+
 .upload h2 {
     margin-block: 30px;
 }
 
-.upload button {
-    margin-top: 20px;
+
+
+.colRight {
+    width: 100%;
 }

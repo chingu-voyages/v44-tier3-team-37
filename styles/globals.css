@@ -1,16 +1,22 @@
 :root {
   --bg: #ced7e4;
 
-  --primary-text: black; /* most text */
-  --secondary-text: #464646; /* labels and secondary text */
-  --tertiary-text: white; /* modals and bold button text */
+  --primary-text: black;
+  /* most text */
+  --secondary-text: #464646;
+  /* labels and secondary text */
+  --tertiary-text: white;
+  /* modals and bold button text */
 
-  --primary-color: #486284; /* modals and bold buttons */
+  --primary-color: #486284;
+  /* modals and bold buttons */
   --primary-color-hover: #6082ae;
 
-  --secondary-color: #dee5ed; /* image placeholders */
+  --secondary-color: #dee5ed;
+  /* image placeholders */
 
-  --tertiary-color: white; /* common buttons */
+  --tertiary-color: white;
+  /* common buttons */
   --tertiary-color-hover: rgb(236, 236, 236);
 
   --warning: #ff6b6b;
@@ -52,19 +58,23 @@
   margin: 0;
   list-style: none;
 }
+
 html,
 body {
   overflow-x: hidden;
   background-color: var(--bg);
   color: var(--primary-text);
 }
+
 h1,
 h2 {
   font-weight: 600;
 }
+
 label {
   color: var(--secondary-text);
 }
+
 textarea,
 input {
   background-color: var(--inputs);
@@ -74,6 +84,7 @@ input {
   border: none;
   font-family: inherit;
 }
+
 button {
   border-radius: 4px;
   padding: 0.4rem 1rem;
@@ -84,10 +95,12 @@ button {
   width: fit-content;
   font-weight: 600;
 }
+
 a {
   text-decoration: none;
   color: var(--primary-color);
 }
+
 a:hover {
   text-decoration: underline;
 }

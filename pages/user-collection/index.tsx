@@ -7,7 +7,7 @@ interface ImagesProps {
 }
 
 const UserCollection: React.FC<ImagesProps> = (props) => {
-    const userImages: number[] = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26]
+    const userImages: number[] = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 
     const deleteSavedImage = () => {
 

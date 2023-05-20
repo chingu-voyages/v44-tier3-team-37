@@ -1,12 +1,6 @@
 .main {
-  height: 100vh;
-  background-color: hsl(var(--bg-hsl));
-  color: hsl(var(--fg-hsl));
   display: flex;
   flex-direction: column;
   text-align: center;
-}
-
-.main h1 {
-  margin: 6rem;
+  gap: 0.4em;
 }

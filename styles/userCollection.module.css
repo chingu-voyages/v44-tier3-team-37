@@ -1,0 +1,19 @@
+.userCollectionOuterContainer {
+    display: flex;
+    justify-content: center;
+    margin: 0 auto;
+    margin-top: 200px;
+    width: 1000px;
+    padding-left: 200px;
+}
+
+.userSavedImages {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.userImage {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}

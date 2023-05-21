@@ -1,20 +1,22 @@
 import { getImageData } from 'next-s3-upload'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
-import { RxUpload } from 'react-icons/rx'
+
+import { IoCloudUploadOutline } from 'react-icons/io5'
 import clsx from 'clsx'
 import Image from 'next/image'
 import s from './Dropzone.module.css'
 
 type DropzoneProps = {
   setFiles: React.Dispatch<React.SetStateAction<File[]>>
-  imageUrl: string
+  setPreview: React.Dispatch<React.SetStateAction<string>>
+  preview: string
 }
 
-function Dropzone({ setFiles, imageUrl }: DropzoneProps) {
+function Dropzone({ setFiles, setPreview, preview }: DropzoneProps) {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-  const [preview, setPreview] = useState('')
+  // const [preview, setPreview] = useState('')
 
   const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
     if (acceptedFiles.length > 0) {
@@ -38,9 +40,13 @@ function Dropzone({ setFiles, imageUrl }: DropzoneProps) {
     },
   })
 
+  function revokeObjectURL() {
+    if (preview) URL.revokeObjectURL(preview)
+  }
+
   useEffect(() => {
     return () => {
-      if (preview) URL.revokeObjectURL(preview)
+      revokeObjectURL()
     }
   }, [])
 
@@ -51,22 +57,37 @@ function Dropzone({ setFiles, imageUrl }: DropzoneProps) {
   return (
     <>
       <div className={s.container}>
-        <div className={dropzoneStyle}>
-          <div {...getRootProps()}>
-            <input {...getInputProps()} />
-            <p>Drag and drop</p>
-            <RxUpload size={'3em'} />
-            <p>Or click to upload</p>
+        {preview != '' ? (
+          <div className={s.imageWrapper}>
+            <img className={s.image} src={preview} alt='' />
+            <p>
+              {height} x {width}
+            </p>
           </div>
-        </div>
-
-        <div className={s.preview}>
-          <img className={s.image} src={preview} alt='' />
-        </div>
+        ) : (
+          <div className={dropzoneStyle}>
+            <div {...getRootProps()}>
+              <input {...getInputProps()} />
+              <p>Drag and drop</p>
+              <IoCloudUploadOutline size={'3em'} />
+              <p>Or click to upload</p>
+            </div>
+          </div>
+        )}
       </div>
       <p className={warningStyle}>Unsupported file type...</p>
     </>
   )
+}
+
+{
+  /* <Image
+              src='https://fakeimg.pl/400x400/efeff0/464646?text=Preview&font=noto'
+             width={260}
+             height={260}
+             alt='preview image'
+               style={{ objectFit: 'contain' }}
+           /> */
 }
 
 export default Dropzone

@@ -1,14 +1,20 @@
 import { useState, useRef } from 'react'
-import { useS3Upload, getImageData } from 'next-s3-upload'
-import Image from 'next/image'
+import { useS3Upload } from 'next-s3-upload'
 import s from './Upload.module.css'
-import { Btn } from '@/components/Buttons/Buttons'
+import { Btn, BoldBtn } from '@/components/Buttons/Buttons'
 import Dropzone from './Dropzone'
 
 export default function Upload() {
   const [imageUrl, setImageUrl] = useState('')
   const [files, setFiles] = useState<File[]>([])
-  const { FileInput, openFileDialog, uploadToS3 } = useS3Upload()
+  const { uploadToS3 } = useS3Upload()
+  const [preview, setPreview] = useState('')
+
+  const titleRef = useRef<HTMLInputElement>(null)
+  const locationRef = useRef<HTMLInputElement>(null)
+  const dateRef = useRef<HTMLInputElement>(null)
+  const descRef = useRef<HTMLTextAreaElement>(null)
+  const altRef = useRef<HTMLInputElement>(null)
 
   const handleSubmit = async function (event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
@@ -21,26 +27,29 @@ export default function Upload() {
       <form onSubmit={handleSubmit}>
         <h2>Upload Image</h2>
         <label htmlFor='title'>Image title</label>
-        <input type='text' name='title' id='title' />
+        <input ref={titleRef} type='text' name='title' id='title' />
         <div className={s.inputGroup}>
           <div className={s.location}>
             <label htmlFor='location'>Location</label>
-            <input type='text' name='location' id='location' />
+            <input ref={locationRef} type='text' name='location' id='location' />
           </div>
           <div className={s.date}>
             <label htmlFor='date'>Date</label>
-            <input type='date' name='date' id='date' />
+            <input ref={dateRef} type='date' name='date' id='date' />
           </div>
         </div>
         <label htmlFor='description'>Description</label>
-        <textarea name='description' id='description' />
+        <textarea ref={descRef} name='description' id='description' />
 
         <label htmlFor='alt'>Image alt text</label>
-        <input type='text' name='alt' id='alt' />
-        <Dropzone setFiles={setFiles} imageUrl={imageUrl} />
-        <Btn type='submit' onClick={handleSubmit}>
-          Submit
-        </Btn>
+        <input ref={altRef} type='text' name='alt' id='alt' />
+        <Dropzone setFiles={setFiles} setPreview={setPreview} preview={preview} />
+        <div className={s.btnGroup}>
+          <Btn onClick={() => setPreview('')}>Cancel</Btn>
+          <BoldBtn type='submit' onClick={handleSubmit}>
+            Upload
+          </BoldBtn>
+        </div>
       </form>
     </div>
   )

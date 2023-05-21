@@ -33,9 +33,13 @@
     flex-direction: column;
 }
 
-.upload button {
-    margin-left: auto;
+.btnGroup {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
 }
+
+
 
 .upload h2 {
     margin-block: 30px;

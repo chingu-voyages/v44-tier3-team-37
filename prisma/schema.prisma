@@ -63,11 +63,17 @@ model Organization {
   @@map("organizations")
 }
 
-// placeholder Image model - to be changed
+
 model Image {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   userId String @map("user_id") @db.ObjectId
-  name   String
+  uploadedAt DateTime @map("uploaded_at") @default(now())
+  title   String
+  location String?
+  description String?
+  date DateTime?
+  alt String?
+  url String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("images")

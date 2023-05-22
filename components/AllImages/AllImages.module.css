@@ -1,0 +1,9 @@
+.all-images-home-page {
+  display: flex;
+  flex-direction: row;
+  overflow: scroll;
+}
+
+.one-image-home-page {
+  height: 10%;
+}

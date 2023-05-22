@@ -2,13 +2,16 @@ import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import allImages from "../components/AllImages/AllImages";
+import AllImages from "../components/AllImages/AllImages";
 
 import s from "@/styles/Home.module.css";
 
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
+  const allImages: number[] = [
+    10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+  ];
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -30,6 +33,7 @@ export default function Home() {
         ) : null}
         <h2>Find your open source images</h2>
       </main>
+      <AllImages />
     </>
   );
 }

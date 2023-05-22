@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import prisma from "@/lib/prisma";
+import Link from "next/link";
+import "./AllImages.module.css";
 
 interface ImagesProps {
   images: { id: number; image: string };
@@ -12,11 +14,16 @@ const allImages: React.FC<ImagesProps> = (props) => {
 
   return (
     <div>
-      <div>
+      <div className="all-images-home-page">
         {allImages.map((allImages) => (
-          <div key={allImages}>
-            <img src={`https://picsum.photos/id/${allImages}/192/200`} />
-          </div>
+          <Link href={`/images/${allImages._id}`} key={allImages}>
+            <p>{allImages.title}</p>
+            <img
+              className="one-image-home-page"
+              src={`https://picsum.photos/id/${allImages}/192/200`}
+              // alt={allImages.title}
+            />
+          </Link>
         ))}
       </div>
     </div>

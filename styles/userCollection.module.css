@@ -3,18 +3,31 @@
     justify-content: center;
     margin: 0 auto;
     margin-top: 200px;
-    /* width: 1000px; */
-    /* padding-left: 200px; */
 }
 
 .userSavedImages {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: center
+    justify-content: center;
+    max-width: 1300px;
+}
+
+.userImageContainer {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    position: relative;
 }
 
 .userImage {
-    margin-left: 10px;
-    margin-bottom: 10px;
+    height: 230px;
+    width: 240px;
+}
+
+.favoriteIcon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 8px;
+    margin-right: 8px;
 }

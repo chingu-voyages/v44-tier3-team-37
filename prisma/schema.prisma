@@ -75,8 +75,20 @@ model Image {
   alt String?
   url String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tagIds String[] @map("tag_ids") @db.ObjectId
+  tags   Tags[] @relation(fields: [tagIds], references: [id])
+
 
   @@map("images")
+}
+
+model Tags {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  name   String
+  imageIds String[] @map("image_ids") @db.ObjectId
+  images Image[]  @relation(fields: [imageIds], references: [id])
+
+  @@map("tags")
 }
 
 model VerificationToken {

@@ -16,7 +16,6 @@ type DropzoneProps = {
 function Dropzone({ setFiles, setPreview, preview }: DropzoneProps) {
   const [width, setWidth] = useState(0)
   const [height, setHeight] = useState(0)
-  // const [preview, setPreview] = useState('')
 
   const onDrop = useCallback(async (acceptedFiles: Blob[]) => {
     if (acceptedFiles.length > 0) {

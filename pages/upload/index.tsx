@@ -3,10 +3,17 @@ import { useS3Upload } from 'next-s3-upload'
 import s from './Upload.module.css'
 import { Btn, BoldBtn } from '@/components/Buttons/Buttons'
 import Dropzone from './Dropzone'
+import Tags from './Tags'
+
+export type Tag = {
+  name: string
+  id: number
+}
 
 export default function Upload() {
   const [imageUrl, setImageUrl] = useState('')
   const [files, setFiles] = useState<File[]>([])
+  const [tags, setTags] = useState<Tag[]>([])
   const { uploadToS3 } = useS3Upload()
   const [preview, setPreview] = useState('')
 
@@ -40,17 +47,23 @@ export default function Upload() {
         </div>
         <label htmlFor='description'>Description</label>
         <textarea ref={descRef} name='description' id='description' />
-
         <label htmlFor='alt'>Image alt text</label>
         <input ref={altRef} type='text' name='alt' id='alt' />
+        <Tags tags={tags} setTags={setTags} />
         <Dropzone setFiles={setFiles} setPreview={setPreview} preview={preview} />
         <div className={s.btnGroup}>
           <Btn onClick={() => setPreview('')}>Cancel</Btn>
-          <BoldBtn type='submit' onClick={handleSubmit}>
-            Upload
-          </BoldBtn>
+          <BoldBtn onClick={handleSubmit}>Upload</BoldBtn>
         </div>
       </form>
     </div>
   )
+}
+
+export async function getServerSideProps() {
+  return {
+    props: {
+      title: 'Upload',
+    },
+  }
 }

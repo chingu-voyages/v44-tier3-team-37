@@ -1,0 +1,42 @@
+.tagInput {
+    display: flex;
+    align-items: center;
+    background-color: var(--inputs);
+    width: fit-content;
+    border-radius: .8em;
+    padding-right: 6px;
+}
+
+.tagInput input {
+    margin-bottom: 0px;
+    max-width: 6em;
+}
+
+.tagInput span {
+    font-size: .8rem;
+    color: var(--secondary-text);
+    padding-inline: 2px;
+    cursor: pointer;
+}
+
+.tags {
+    display: flex;
+    gap: .5em;
+    flex-wrap: wrap;
+
+}
+
+.tags div {
+    border-radius: .8em;
+    align-items: center;
+    padding-inline: .5em;
+    display: flex;
+    gap: .5em;
+    background-color: var(--inputs);
+}
+
+.tags span {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}

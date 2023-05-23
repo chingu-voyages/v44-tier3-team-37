@@ -6,7 +6,6 @@ import { useDropzone } from 'react-dropzone'
 
 import { UploadCloud } from './Icons'
 import clsx from 'clsx'
-import Image from 'next/image'
 import s from './Dropzone.module.css'
 
 type DropzoneProps = {
@@ -79,16 +78,6 @@ function Dropzone({ setFiles, setPreview, preview }: DropzoneProps) {
       <p className={warningStyle}>Unsupported file type...</p>
     </>
   )
-}
-
-{
-  /* <Image
-              src='https://fakeimg.pl/400x400/efeff0/464646?text=Preview&font=noto'
-             width={260}
-             height={260}
-             alt='preview image'
-               style={{ objectFit: 'contain' }}
-           /> */
 }
 
 export default Dropzone

@@ -10,7 +10,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       },
     })
     res.status(201).json(tag)
-  } else {
-    throw new Error(`The HTTP ${req.method} method is not supported at this route.`)
+    return
   }
+  if (req.method === 'GET') {
+    const tags = await prisma.tag.findMany()
+    res.status(200).json(tags)
+    return
+  }
+  throw new Error(`The HTTP ${req.method} method is not supported at this route.`)
 }

@@ -17,6 +17,9 @@
     opacity: .5;
 }
 
+.dropzone>div {
+    width: 100%;
+}
 
 .dropzone:hover {
     opacity: .8;

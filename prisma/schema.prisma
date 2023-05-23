@@ -71,18 +71,18 @@ model Image {
   title   String
   location String?
   description String?
-  date DateTime?
+  date DateTime? 
   alt String?
   url String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   tagIds String[] @map("tag_ids") @db.ObjectId
-  tags   Tags[] @relation(fields: [tagIds], references: [id])
+  tags   Tag[] @relation(fields: [tagIds], references: [id])
 
 
   @@map("images")
 }
 
-model Tags {
+model Tag {
   id     String @id @default(auto()) @map("_id") @db.ObjectId
   name   String
   imageIds String[] @map("image_ids") @db.ObjectId

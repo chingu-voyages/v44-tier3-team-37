@@ -1,8 +1,10 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable @next/next/no-img-element */
 import { getImageData } from 'next-s3-upload'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 
-import { IoCloudUploadOutline } from 'react-icons/io5'
+import { UploadCloud } from './Icons'
 import clsx from 'clsx'
 import Image from 'next/image'
 import s from './Dropzone.module.css'
@@ -68,7 +70,7 @@ function Dropzone({ setFiles, setPreview, preview }: DropzoneProps) {
             <div {...getRootProps()}>
               <input {...getInputProps()} />
               <p>Drag and drop</p>
-              <IoCloudUploadOutline size={'3em'} />
+              <UploadCloud size={48} />
               <p>Or click to upload</p>
             </div>
           </div>

@@ -1,17 +1,25 @@
 import { useState, useRef } from 'react'
+import prisma from '@/lib/prisma'
 import { useS3Upload } from 'next-s3-upload'
 import s from './Upload.module.css'
 import { Btn, BoldBtn } from '@/components/Buttons/Buttons'
-import Dropzone from './Dropzone'
-import Tags from './Tags'
+import Dropzone from '@/components/Upload/Dropzone'
+import Tags from '@/components/Upload/Tags'
+import { useSession } from 'next-auth/react'
 
 export type Tag = {
   name: string
-  id: number
+  id: string
 }
 
-export default function Upload() {
-  const [imageUrl, setImageUrl] = useState('')
+export type TagWithImages = {
+  name: string
+  id: string
+  imageIds: string[]
+}
+
+export default function Upload({ allTags }: { allTags: TagWithImages[] }) {
+  const { data: session } = useSession()
   const [files, setFiles] = useState<File[]>([])
   const [tags, setTags] = useState<Tag[]>([])
   const { uploadToS3 } = useS3Upload()
@@ -25,13 +33,34 @@ export default function Upload() {
 
   const handleSubmit = async function (event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const { url } = await uploadToS3(files[0])
-    setImageUrl(url)
+    try {
+      const { url } = await uploadToS3(files[0])
+      const res = await fetch('/api/image', {
+        method: 'POST',
+        body: JSON.stringify({
+          user: session && session.user.id,
+          title: titleRef.current?.value,
+          location: locationRef.current?.value,
+          date: dateRef.current?.value,
+          description: descRef.current?.value,
+          alt: altRef.current?.value,
+          url,
+          tagIds: tags.map((tag) => tag.id),
+        }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      const data = await res.json()
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
   }
 
   return (
     <div className={s.upload}>
-      <form onSubmit={handleSubmit}>
+      <form>
         <h2>Upload Image</h2>
         <label htmlFor='title'>Image title</label>
         <input ref={titleRef} type='text' name='title' id='title' />
@@ -49,7 +78,7 @@ export default function Upload() {
         <textarea ref={descRef} name='description' id='description' />
         <label htmlFor='alt'>Image alt text</label>
         <input ref={altRef} type='text' name='alt' id='alt' />
-        <Tags tags={tags} setTags={setTags} />
+        <Tags tags={tags} setTags={setTags} allTags={allTags} />
         <Dropzone setFiles={setFiles} setPreview={setPreview} preview={preview} />
         <div className={s.btnGroup}>
           <Btn onClick={() => setPreview('')}>Cancel</Btn>
@@ -61,9 +90,12 @@ export default function Upload() {
 }
 
 export async function getServerSideProps() {
+  const tags = await prisma.tag.findMany()
+  console.log(tags)
+
   return {
     props: {
-      title: 'Upload',
+      allTags: tags,
     },
   }
 }

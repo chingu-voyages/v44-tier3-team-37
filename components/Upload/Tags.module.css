@@ -40,3 +40,12 @@
     align-items: center;
     cursor: pointer;
 }
+
+.label {
+    display: flex;
+    gap: 2rem;
+}
+
+.label p {
+    color: var(--secondary-text)
+}

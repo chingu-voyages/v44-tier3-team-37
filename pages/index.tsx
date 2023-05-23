@@ -1,14 +1,16 @@
 import Head from "next/head";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import Link from "next/link";
 import AllImages from "../components/AllImages/AllImages";
+import NavSearch from "../components/NavSearch/NavSearch";
 
 import s from "@/styles/Home.module.css";
 
 export default function Home() {
   const router = useRouter();
   const { data: session } = useSession();
+  // TODO modify this test with real data
+
   const allImages: number[] = [
     10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
   ];
@@ -33,6 +35,8 @@ export default function Home() {
         ) : null}
         <h2>Find your open source images</h2>
       </main>
+
+      <NavSearch />
       <AllImages />
     </>
   );

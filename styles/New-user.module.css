@@ -1,0 +1,64 @@
+.onboarding {
+  min-height: 75vh;
+}
+.onboarding h2 {
+  text-align: center;
+}
+.onboarding form {
+  display: grid;
+  gap: 1em;
+  margin-top: 1.4em;
+  width: 600px;
+  max-width: 90vw;
+}
+.onboarding input {
+  background-color: var(--inputs);
+}
+.onboarding button[type="submit"] {
+  justify-self: center;
+  margin-top: 1em;
+}
+
+/* radio - uiverse.io @ https://uiverse.io/Yaya12085/rude-mouse-79 */
+.radio {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 0.5rem;
+  background-color: var(--inputs);
+  box-sizing: border-box;
+  box-shadow: 0 0 0px 1px rgba(0, 0, 0, 0.06);
+  padding: 0.25rem;
+  width: 300px;
+  font-size: 14px;
+  justify-self: center;
+  max-width: 94vw;
+}
+
+.radio label {
+  flex: 1 1 auto;
+  text-align: center;
+}
+
+.radio label input {
+  display: none;
+}
+
+.radio label span {
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  border: none;
+  padding: 0.5rem 0;
+  color: var(--secondary-text);
+  transition: all 0.15s ease-in-out;
+}
+
+.radio label input:checked + span {
+  background-color: #fff;
+  font-weight: 600;
+  color: rgba(51, 65, 85, 1);
+}
+/*  */

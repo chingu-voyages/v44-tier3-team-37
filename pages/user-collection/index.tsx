@@ -15,6 +15,24 @@ const UserCollection: React.FC<ImagesProps> = (props) => {
 
     // const [userImages, setUserImages] = useState<{id: number, image: string}[]>();
 
+    // const handleForm = async (e: React.SyntheticEvent) => {
+    //     e.preventDefault();
+    //     try {
+    //       const body = { isOrg, orgName, orgDesc };
+    //       await fetch(`/api/onboarding`, {
+    //         method: "POST",
+    //         headers: {
+    //           "Content-Type": "application/json",
+    //         },
+    //         body: JSON.stringify(body),
+    //       });
+    //       await update({ role: isOrg ? "ORG" : "USER" });
+    //       await router.push("/");
+    //     } catch (error) {
+    //       console.error(error);
+    //     }
+    //   };
+
 
 
 

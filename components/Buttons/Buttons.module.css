@@ -3,9 +3,14 @@
   background-color: var(--tertiary-color);
   border: 1px solid var(--tertiary-color);
 }
-.common:hover {
+.common:hover:enabled {
   background-color: var(--tertiary-color-hover);
   border: 1px solid var(--tertiary-color-hover);
+}
+.common:disabled {
+  color: var(--primary-color-hover);
+  background-color: var(--secondary-color);
+  border: 1px solid var(--secondary-color);
 }
 .bold {
   color: var(--tertiary-text);

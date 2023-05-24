@@ -59,8 +59,19 @@
   list-style: none;
 }
 
+<<<<<<< HEAD
+=======
+/* html,
+body {
+  max-width: var(--max-width);
+  overflow-x: hidden;
+} */
+
+>>>>>>> user-collection
 html,
 body {
+  max-width: var(--max-width);
+  margin: 0 auto;
   overflow-x: hidden;
   background-color: var(--bg);
   color: var(--primary-text);

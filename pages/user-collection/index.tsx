@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { getServerSession } from "next-auth";
-import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { useSession } from 'next-auth/react';
+
 import styles from '../../styles/userCollection.module.css';
 
 
@@ -9,10 +9,15 @@ interface ImagesProps {
 }
 
 const UserCollection: React.FC<ImagesProps> = (props) => {
-    const session = getServerSession(req, res, authOptions);
+    const { data: session, status} = useSession();
+    console.log('session', session);
+    const userId = session?.user.id;
+
     const userImages: number[] = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 
-   
+    const deleteSavedImage = () => {
+
+    }
 
 
 

@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import styles from '../../styles/userCollection.module.css';
 
 
@@ -7,31 +9,10 @@ interface ImagesProps {
 }
 
 const UserCollection: React.FC<ImagesProps> = (props) => {
+    const session = getServerSession(req, res, authOptions);
     const userImages: number[] = [10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
 
-    const deleteSavedImage = () => {
-
-    }
-
-    // const [userImages, setUserImages] = useState<{id: number, image: string}[]>();
-
-    // const handleForm = async (e: React.SyntheticEvent) => {
-    //     e.preventDefault();
-    //     try {
-    //       const body = { isOrg, orgName, orgDesc };
-    //       await fetch(`/api/onboarding`, {
-    //         method: "POST",
-    //         headers: {
-    //           "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify(body),
-    //       });
-    //       await update({ role: isOrg ? "ORG" : "USER" });
-    //       await router.push("/");
-    //     } catch (error) {
-    //       console.error(error);
-    //     }
-    //   };
+   
 
 
 

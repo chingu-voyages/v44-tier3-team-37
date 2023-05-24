@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-export default async function Handler(req: NextApiRequest, res: NextApiResponse) {
-  const session = await getServerSession(req, res, authOptions);
+export default async function SaveUnsaveHandler(req: NextApiRequest, res: NextApiResponse) {
+    const session = await getServerSession(req, res, authOptions);
     const router = useRouter();
     const imageId = router.query.id;
 

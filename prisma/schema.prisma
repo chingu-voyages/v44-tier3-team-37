@@ -64,12 +64,11 @@ model Organization {
 }
 
 model Image {
-  id             String        @id @default(auto()) @map("_id") @db.ObjectId
-  uploadedAt     DateTime      @default(now()) @map("uploaded_at")
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId  
   title          String
   location       String?
   description    String?
-  date           DateTime?
+  date           String?
   alt            String?
   url            String
   tagIds         String[]      @map("tag_ids") @db.ObjectId

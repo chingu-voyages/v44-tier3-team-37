@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 
-import styles from '../../styles/userCollection.module.css';
+import styles from '../../styles/UserCollection.module.css';
 
 
 interface ImagesProps {

@@ -16,7 +16,7 @@ import type { NextAuthOptions, Session } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 
-import styles from "@/styles/New-user.module.css";
+import styles from "@/styles/Account.module.css";
 import { Btn, WarningBtn } from "@/components/Buttons/Buttons";
 
 export default function Account({

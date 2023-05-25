@@ -26,17 +26,18 @@ interface ImagesProps {
 const Collection: React.FC<ImagesProps> = ({ allImages }) => {
     const { data: session, status } = useSession();
 
+    console.log('allImages', allImages)
 
     return (
-        <div className={styles.userCollectionOuterContainer}>
-            <div className={styles.allImages}>
-                {/* {allImages.map(image => (
-                    <div className={styles.imageContainer} key={image}>
-                        <img src={} className={styles.image} alt="" />
+        <div>
+            <div className={styles.collectionOuterContainer}>
+                {allImages.map(image => (
+                    <div className={styles.imageContainer} key={image.id}>
+                        <img src={image.url} className={styles.image} alt="" />
                         <svg xmlns="http://www.w3.org/2000/svg" className={styles.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                        {/* <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> */}
                     </div>
-                ))} */}
+                ))}
             </div>
         </div>
     )
@@ -47,11 +48,7 @@ export async function getServerSideProps(context: {
     res: NextApiResponse;
     authOptions: NextAuthOptions;
 }) {
-    let images = await prisma.image.findMany();
-
-    const allImages = images.forEach(image => {
-        image.uploadedAt = JSON.parse(JSON.stringify(image.uploadedAt))
-    })
+    let allImages = await prisma.image.findMany();
 
     return {
         props: {

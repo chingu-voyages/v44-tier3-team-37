@@ -15,6 +15,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 
 import styles from "@/styles/Account.module.css";
+import LoadingSpinner from "@/components/Loading/LoadingSpinner";
 import {
   Btn,
   WarningBtn,
@@ -24,10 +25,9 @@ import {
 export default function Account({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const [isEditing, setIsEditing] = useState(false);
   const [orgName, setOrgName] = useState(data?.organization?.orgName);
   const [orgDesc, setOrgDesc] = useState(data?.organization?.orgDesc);
-
+  const [isEditing, setIsEditing] = useState(false);
   const [updatedOrgName, setUpdatedOrgName] = useState(
     data?.organization?.orgName
   );
@@ -35,11 +35,14 @@ export default function Account({
     data?.organization?.orgDesc
   );
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleForm = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
     try {
       const body = { updatedOrgName, updatedOrgDesc };
+      setIsLoading(true);
       await fetch(`/api/account/update`, {
         method: "POST",
         headers: {
@@ -47,10 +50,10 @@ export default function Account({
         },
         body: JSON.stringify(body),
       });
-      console.log("completed");
 
       setOrgName(updatedOrgName);
       setOrgDesc(updatedOrgDesc);
+      setIsLoading(false);
       setIsEditing(false);
     } catch (error) {
       console.error(error);
@@ -60,7 +63,7 @@ export default function Account({
   if (!data) {
     return (
       <>
-        <h1>Error</h1>
+        <h2>Error</h2>
         <Link href="/">Return to homepage</Link>
       </>
     );
@@ -105,7 +108,14 @@ export default function Account({
               <WarningBtn onClick={() => setIsEditing(false)}>
                 Cancel
               </WarningBtn>
-              <Btn type="submit" disabled={!updatedOrgName || !updatedOrgDesc}>
+              <Btn
+                type="submit"
+                disabled={
+                  !updatedOrgName ||
+                  !updatedOrgDesc ||
+                  (updatedOrgName == orgName && updatedOrgDesc == orgDesc)
+                }
+              >
                 Update
               </Btn>
             </div>
@@ -121,6 +131,7 @@ export default function Account({
           </div>
         )}
       </div>
+      {isLoading ? <LoadingSpinner /> : null}
     </>
   );
 }
@@ -173,7 +184,6 @@ export async function getServerSideProps(context: {
       },
       session: session,
     };
-    console.log(data);
     return {
       props: {
         data,

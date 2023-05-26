@@ -21,9 +21,11 @@ function Header() {
       <h1>Image Vault</h1>
       <nav>
         <ul>
-          <li>
-            <Link href="/account">Account</Link>
-          </li>
+          {session ? (
+            <li>
+              <Link href="/account">Account</Link>
+            </li>
+          ) : null}
           {currentPath !== "/auth/new-user" ? (
             <li>
               <BoldBtn onClick={handleClick}>

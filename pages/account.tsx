@@ -164,8 +164,18 @@ export async function getServerSideProps(context: {
       },
     };
   }
+
   // if we have a session with user role - return session
-  if (session.user.role == "USER") return { props: { session: session } };
+  if (session.user.role == "USER") {
+    const data: AccountData = {
+      session: session,
+    };
+    return {
+      props: {
+        data,
+      },
+    };
+  }
 
   const org = await prisma.organization.findFirst({
     where: {

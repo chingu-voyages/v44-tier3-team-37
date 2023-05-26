@@ -1,5 +1,6 @@
-import { signIn, signOut, useSession } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { signIn, signOut, useSession } from "next-auth/react";
 import styles from "./Header.module.css";
 import { BoldBtn } from "@/components/Buttons/Buttons";
 
@@ -20,6 +21,9 @@ function Header() {
       <h1>Image Vault</h1>
       <nav>
         <ul>
+          <li>
+            <Link href="/account">Account</Link>
+          </li>
           {currentPath !== "/auth/new-user" ? (
             <li>
               <BoldBtn onClick={handleClick}>

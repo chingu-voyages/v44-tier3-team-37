@@ -12,3 +12,11 @@
   font-weight: 600;
   font-size: 1.25em;
 }
+.header ul {
+  display: flex;
+  align-items: center;
+  gap: 1em;
+}
+.header a {
+  font-size: 0.95em;
+}

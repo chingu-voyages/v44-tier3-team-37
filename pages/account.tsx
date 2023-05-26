@@ -83,7 +83,7 @@ export default function Account({
         {data.session.user.role != "ORG" ? (
           <OutlineWarningBtn>Delete Account</OutlineWarningBtn>
         ) : isEditing ? (
-          <form onSubmit={handleForm}>
+          <form onSubmit={handleForm} className={styles.container}>
             <label htmlFor="name">Organization name</label>
             <input
               id="name"
@@ -100,20 +100,24 @@ export default function Account({
               cols={30}
               rows={8}
             ></textarea>
-            <WarningBtn onClick={() => setIsEditing(false)}>Cancel</WarningBtn>
-            <Btn type="submit" disabled={!updatedOrgName || !updatedOrgDesc}>
-              Update
-            </Btn>
+            <div className={styles.btnContainer}>
+              <WarningBtn onClick={() => setIsEditing(false)}>
+                Cancel
+              </WarningBtn>
+              <Btn type="submit" disabled={!updatedOrgName || !updatedOrgDesc}>
+                Update
+              </Btn>
+            </div>
           </form>
         ) : (
-          <>
-            <h1>{orgName}</h1>
+          <div className={styles.container}>
+            <h2>{orgName}</h2>
             <p>{orgDesc}</p>
             <div className={styles.btnContainer}>
               <OutlineWarningBtn>Delete Account</OutlineWarningBtn>
               <Btn onClick={() => setIsEditing(true)}>Update</Btn>
             </div>
-          </>
+          </div>
         )}
       </div>
     </>
@@ -165,7 +169,6 @@ export async function getServerSideProps(context: {
       organization: {
         orgName: org.name,
         orgDesc: org.description,
-        orgCollectionLength: org.images.length,
       },
       session: session,
     };

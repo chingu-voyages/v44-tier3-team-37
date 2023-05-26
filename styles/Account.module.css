@@ -1,0 +1,15 @@
+.account h2 {
+  font-size: 2em;
+}
+.container {
+  display: grid;
+  gap: 1em;
+  margin-top: 1.4em;
+  width: 600px;
+  max-width: 90vw;
+}
+.btnContainer {
+  display: flex;
+  gap: 1em;
+  margin-top: 2em;
+}

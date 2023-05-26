@@ -27,7 +27,6 @@ export default async function handle(
           },
         },
       });
-      res.json(updateUser);
     } else {
       const updateUser = await prisma.user.update({
         where: {
@@ -37,7 +36,6 @@ export default async function handle(
           role: "USER",
         },
       });
-      res.json(updateUser);
     }
   } else {
     res.status(401).send({ message: "Unauthorized" });

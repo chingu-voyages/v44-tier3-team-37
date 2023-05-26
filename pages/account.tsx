@@ -2,10 +2,8 @@ import { useState } from "react";
 
 import Head from "next/head";
 import Link from "next/link";
-// import { useRouter } from "next/router";
 import type {
   InferGetServerSidePropsType,
-  GetServerSideProps,
   NextApiRequest,
   NextApiResponse,
 } from "next";
@@ -17,31 +15,45 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import prisma from "@/lib/prisma";
 
 import styles from "@/styles/Account.module.css";
-import { Btn, WarningBtn } from "@/components/Buttons/Buttons";
+import {
+  Btn,
+  WarningBtn,
+  OutlineWarningBtn,
+} from "@/components/Buttons/Buttons";
 
 export default function Account({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  // const router = useRouter();
-
+  const [isEditing, setIsEditing] = useState(false);
   const [orgName, setOrgName] = useState(data?.organization?.orgName);
   const [orgDesc, setOrgDesc] = useState(data?.organization?.orgDesc);
+
+  const [updatedOrgName, setUpdatedOrgName] = useState(
+    data?.organization?.orgName
+  );
+  const [updatedOrgDesc, setUpdatedOrgDesc] = useState(
+    data?.organization?.orgDesc
+  );
 
   const handleForm = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    try {
-      const body = { orgName, orgDesc };
-      await fetch(`/api/onboarding`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(body),
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    setOrgName(updatedOrgName);
+    setOrgDesc(updatedOrgDesc);
+    setIsEditing(false);
+    console.log(updatedOrgName, updatedOrgDesc);
+    // try {
+    //   const body = { orgName, orgDesc };
+    //   await fetch(`/api/onboarding`, {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify(body),
+    //   });
+    // } catch (error) {
+    //   console.error(error);
+    // }
   };
 
   if (!data) {
@@ -53,7 +65,7 @@ export default function Account({
     );
   }
   if (data.session.user.role == "USER") {
-    return <WarningBtn>Delete Account</WarningBtn>;
+    return <OutlineWarningBtn>Delete Account</OutlineWarningBtn>;
   }
 
   return (
@@ -69,12 +81,38 @@ export default function Account({
       </Head>
       <div className={styles.account}>
         {data.session.user.role != "ORG" ? (
-          <WarningBtn>Delete Account</WarningBtn>
+          <OutlineWarningBtn>Delete Account</OutlineWarningBtn>
+        ) : isEditing ? (
+          <form onSubmit={handleForm}>
+            <label htmlFor="name">Organization name</label>
+            <input
+              id="name"
+              onChange={(e) => setUpdatedOrgName(e.target.value)}
+              value={updatedOrgName}
+              type="text"
+            />
+            <label htmlFor="desc">Tell us about your organization</label>
+            <textarea
+              onChange={(e) => setUpdatedOrgDesc(e.target.value)}
+              value={updatedOrgDesc}
+              name="desc"
+              id=""
+              cols={30}
+              rows={8}
+            ></textarea>
+            <WarningBtn onClick={() => setIsEditing(false)}>Cancel</WarningBtn>
+            <Btn type="submit" disabled={!updatedOrgName || !updatedOrgDesc}>
+              Update
+            </Btn>
+          </form>
         ) : (
           <>
-            <h1>{data.organization?.orgName}</h1>
-            <p>{data.organization?.orgDesc}</p>
-            <WarningBtn>Delete Account</WarningBtn>
+            <h1>{orgName}</h1>
+            <p>{orgDesc}</p>
+            <div className={styles.btnContainer}>
+              <OutlineWarningBtn>Delete Account</OutlineWarningBtn>
+              <Btn onClick={() => setIsEditing(true)}>Update</Btn>
+            </div>
           </>
         )}
       </div>
@@ -86,6 +124,7 @@ type AccountData = {
   organization?: {
     orgName: string;
     orgDesc: string;
+    orgCollectionLength?: number;
   };
   session: Session;
 };
@@ -126,10 +165,11 @@ export async function getServerSideProps(context: {
       organization: {
         orgName: org.name,
         orgDesc: org.description,
+        orgCollectionLength: org.images.length,
       },
       session: session,
     };
-
+    console.log(data);
     return {
       props: {
         data,

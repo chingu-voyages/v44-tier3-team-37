@@ -7,20 +7,26 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { orgName, orgDesc } = req.body;
+  const { updatedOrgName, updatedOrgDesc } = req.body;
   const session = await getServerSession(req, res, authOptions);
 
   if (session) {
-    // update org account data
-    const updateOrg = await prisma.organization.update({
-      where: {
-        userId: session.user?.id,
-      },
-      data: {
-        name: orgName,
-        description: orgDesc,
-      },
-    });
+    try {
+      // update org account data
+      const updateOrg = await prisma.organization.update({
+        where: {
+          userId: session.user?.id,
+        },
+        data: {
+          name: updatedOrgName,
+          description: updatedOrgDesc,
+        },
+      });
+
+      res.status(200).send({ message: "Successfully updated account data" });
+    } catch (error) {
+      res.status(400).send(error);
+    }
   } else {
     res.status(401).send({ message: "Unauthorized" });
   }

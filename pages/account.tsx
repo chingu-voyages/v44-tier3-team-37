@@ -38,12 +38,8 @@ export default function Account({
   const handleForm = async (e: React.SyntheticEvent) => {
     e.preventDefault();
 
-    setOrgName(updatedOrgName);
-    setOrgDesc(updatedOrgDesc);
-    setIsEditing(false);
-
     try {
-      const body = { orgName, orgDesc };
+      const body = { updatedOrgName, updatedOrgDesc };
       await fetch(`/api/account/update`, {
         method: "POST",
         headers: {
@@ -51,6 +47,11 @@ export default function Account({
         },
         body: JSON.stringify(body),
       });
+      console.log("completed");
+
+      setOrgName(updatedOrgName);
+      setOrgDesc(updatedOrgDesc);
+      setIsEditing(false);
     } catch (error) {
       console.error(error);
     }
@@ -96,7 +97,7 @@ export default function Account({
               onChange={(e) => setUpdatedOrgDesc(e.target.value)}
               value={updatedOrgDesc}
               name="desc"
-              id=""
+              id="desc"
               cols={30}
               rows={8}
             ></textarea>
@@ -148,7 +149,7 @@ export async function getServerSideProps(context: {
     return {
       // if we do not have a session - send to signin page
       redirect: {
-        destination: "/auth/signin",
+        destination: "api/auth/signin",
       },
     };
   }

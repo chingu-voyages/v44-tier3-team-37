@@ -22,7 +22,7 @@ export default function NewUser() {
 
     try {
       const body = { isOrg, orgName, orgDesc };
-      await fetch(`api/account/onboarding`, {
+      await fetch(`/api/account/onboarding`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -30,7 +30,6 @@ export default function NewUser() {
         body: JSON.stringify(body),
       });
       await update({ role: isOrg ? "ORG" : "USER" });
-      console.log("completed");
       await router.push("/");
     } catch (error) {
       console.error(error);

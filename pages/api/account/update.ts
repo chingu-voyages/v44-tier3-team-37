@@ -25,7 +25,7 @@ export default async function handle(
 
       res.status(200).send({ message: "Successfully updated account data" });
     } catch (error) {
-      res.status(400).send(error);
+      res.status(405).send(error);
     }
   } else {
     res.status(401).send({ message: "Unauthorized" });

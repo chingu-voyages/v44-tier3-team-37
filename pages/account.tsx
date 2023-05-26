@@ -41,19 +41,19 @@ export default function Account({
     setOrgName(updatedOrgName);
     setOrgDesc(updatedOrgDesc);
     setIsEditing(false);
-    console.log(updatedOrgName, updatedOrgDesc);
-    // try {
-    //   const body = { orgName, orgDesc };
-    //   await fetch(`/api/onboarding`, {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify(body),
-    //   });
-    // } catch (error) {
-    //   console.error(error);
-    // }
+
+    try {
+      const body = { orgName, orgDesc };
+      await fetch(`/api/account/update`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   if (!data) {

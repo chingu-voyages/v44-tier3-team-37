@@ -23,7 +23,7 @@ function Header() {
       </h1>
       <nav>
         <ul>
-          {session ? (
+          {session && currentPath !== "/auth/new-user" ? (
             <li>
               <Link href="/account">Account</Link>
             </li>

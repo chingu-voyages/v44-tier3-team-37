@@ -18,7 +18,9 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <h1>Image Vault</h1>
+      <h1>
+        <Link href="/">Image Vault</Link>
+      </h1>
       <nav>
         <ul>
           {session ? (

@@ -8,9 +8,11 @@
   border: 1px solid #486284;
 }
 .header h1 {
-  color: var(--primary-text);
   font-weight: 600;
   font-size: 1.25em;
+}
+.header h1 a {
+  color: var(--primary-text);
 }
 .header ul {
   display: flex;

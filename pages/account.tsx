@@ -113,7 +113,8 @@ export default function Account({
                 disabled={
                   !updatedOrgName ||
                   !updatedOrgDesc ||
-                  (updatedOrgName == orgName && updatedOrgDesc == orgDesc)
+                  (updatedOrgName == orgName && updatedOrgDesc == orgDesc) ||
+                  isLoading
                 }
               >
                 Update

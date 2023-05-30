@@ -1,46 +1,42 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/lib/prisma'
-import { useRouter } from 'next/router';
+// import { useRouter } from 'next/router';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
 export default async function SaveImageHandler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, authOptions);
-    const router = useRouter();
-    const imageId = router.query.id;
-
-    // const updateImageCollection = await prisma.user.update({
-    //   where: {
-    //     id: session.user?.id,
-    //   },
-    //   data: {
-    //     images: {
-    //   connect: {
-    // imageIds: imageId,
-    //   },
-    // },
-    //     },
-    //   },
-    // });
-
-
-    // images: {
-    //   disconnect: { imageIds: imageId },
-    // },
+    // const router = useRouter();
+    // const imageId = router.query.id;
+    const imageId = req.query.id as string;
 
     if (req.method === 'POST') {
-        const tag = await prisma.tag.create({
+        const saveImageToCollection = await prisma.user.update({
+            where: {
+                id: session.user.id
+            },
             data: {
-                name: name,
+                images: {
+                    connect: { id: imageId }
+                }
             },
         })
-        res.status(201).json(tag)
+        res.status(201).json(saveImageToCollection)
         return
     }
-    if (req.method === 'GET') {
-        const tags = await prisma.tag.findMany()
-        res.status(200).json(tags)
+
+    if (req.method === 'DELETE') {
+        const removeImageFromCollection = await prisma.user.update({
+            where: {
+                id: session.user.id
+            },
+            data: {
+                images: {
+                    disconnect: [{ id: imageId }] 
+                }
+            }
+        })
+        res.status(200).json(removeImageFromCollection)
         return
     }
-    throw new Error(`The HTTP ${req.method} method is not supported at this route.`)
 }

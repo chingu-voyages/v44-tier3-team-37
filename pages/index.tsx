@@ -6,6 +6,8 @@ import { useRouter } from "next/router";
 import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { Organization } from '@prisma/client';
+import { getServerSession } from "next-auth/next"
+
 
 import s from "@/styles/Home.module.css";
 
@@ -38,8 +40,7 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
   }
 
   console.log('session', session)
-
-  console.log('orgImages', organizationImages)
+  console.log('organizationImages', organizationImages)
 
   return (
     <>
@@ -54,9 +55,9 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
-        {session?.user.role === "USER" &&
+        {session?.user.role === "ORG" &&
           <div className={s.collectionOuterContainer}>
-            {allImages.map(image => (
+            {organizationImages.map(image => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt="" />
                 <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -65,9 +66,9 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
             ))}
           </div>
         }
-        {session?.user.role === "ORG" &&
+        {session?.user.role !== "ORG" &&
           <div className={s.collectionOuterContainer}>
-            {organizationImages.map(image => (
+            {allImages.map(image => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt="" />
                 <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -86,15 +87,19 @@ export async function getServerSideProps(context: {
   res: NextApiResponse;
   authOptions: NextAuthOptions;
 }) {
-  const { organizationId } = context.query;
+
+  // const session = await getServerSession(context.req, context.res, context.authOptions)
 
   let allImages = await prisma.image.findMany();
+  let organizationImages;
 
-  let organizationImages = await prisma.image.findMany({
+  // if (session.user.role === "ORG") {
+  organizationImages = await prisma.image.findMany({
     where: {
-      organizationId: "646e7ce4559b6ba0462dc676"
+      // organizationId: session.user.id
     }
   })
+  // }
 
   return {
     props: {

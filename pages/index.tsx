@@ -1,10 +1,34 @@
 import Head from "next/head";
+import prisma from "@/lib/prisma";
+import React, { useState } from 'react';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
+import { NextApiRequest, NextApiResponse } from "next";
+import type { NextAuthOptions, Session } from "next-auth";
+import { Organization } from '@prisma/client';
 
 import s from "@/styles/Home.module.css";
 
-export default function Home() {
+type Image = {
+  _id: string,
+  uploaded_at: string,
+  title: string,
+  location: string,
+  description: string,
+  date: string,
+  alt: string,
+  url: string,
+  tagIds: string,
+  organizationId: string,
+  userId: string
+}
+
+interface ImagesProps {
+  allImages: Image,
+  organizationImages: Image
+}
+
+const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -12,6 +36,10 @@ export default function Home() {
   if (session?.user?.role == "NONE") {
     router.push("/auth/new-user");
   }
+
+  console.log('session', session)
+
+  console.log('orgImages', organizationImages)
 
   return (
     <>
@@ -26,7 +54,54 @@ export default function Home() {
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
+        {session?.user.role === "USER" &&
+          <div className={s.collectionOuterContainer}>
+            {allImages.map(image => (
+              <div className={s.imageContainer} key={image.id}>
+                <img src={image.url} className={s.image} alt="" />
+                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                {/* <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> */}
+              </div>
+            ))}
+          </div>
+        }
+        {session?.user.role === "ORG" &&
+          <div className={s.collectionOuterContainer}>
+            {organizationImages.map(image => (
+              <div className={s.imageContainer} key={image.id}>
+                <img src={image.url} className={s.image} alt="" />
+                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                {/* <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> */}
+              </div>
+            ))}
+          </div>
+        }
       </main>
     </>
   );
 }
+
+export async function getServerSideProps(context: {
+  req: NextApiRequest;
+  res: NextApiResponse;
+  authOptions: NextAuthOptions;
+}) {
+  const { organizationId } = context.query;
+
+  let allImages = await prisma.image.findMany();
+
+  let organizationImages = await prisma.image.findMany({
+    where: {
+      organizationId: "646e7ce4559b6ba0462dc676"
+    }
+  })
+
+  return {
+    props: {
+      allImages,
+      organizationImages,
+    },
+  };
+}
+
+export default Home;

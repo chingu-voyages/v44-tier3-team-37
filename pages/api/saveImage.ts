@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-export default async function SaveUnsaveHandler(req: NextApiRequest, res: NextApiResponse) {
+export default async function SaveImageHandler(req: NextApiRequest, res: NextApiResponse) {
     const session = await getServerSession(req, res, authOptions);
     const router = useRouter();
     const imageId = router.query.id;
@@ -27,10 +27,6 @@ export default async function SaveUnsaveHandler(req: NextApiRequest, res: NextAp
     // images: {
     //   disconnect: { imageIds: imageId },
     // },
-
-
-
-
 
     if (req.method === 'POST') {
         const tag = await prisma.tag.create({

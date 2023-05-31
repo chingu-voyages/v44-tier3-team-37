@@ -40,7 +40,7 @@ export default async function handler(
           },
           title: title,
           location: location,
-          date: safeDate,
+          date: safeDate?.toISOString() ?? null,
           description: description,
           alt: alt,
           url: url,

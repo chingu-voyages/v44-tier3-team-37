@@ -1,4 +1,7 @@
 import { PrismaClient } from "@prisma/client";
+import type { Image } from "@prisma/client";
+
+export type { Image };
 
 const globalForPrisma = global as unknown as {
   prisma: PrismaClient | undefined;

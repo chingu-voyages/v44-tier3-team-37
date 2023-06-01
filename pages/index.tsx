@@ -1,12 +1,26 @@
 import Head from "next/head";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-
+import prisma from "@/lib/prisma";
+import type { Image } from "@/lib/prisma";
+import SearchBar from "@/components/Search/SearchBar";
 import s from "@/styles/Home.module.css";
 
-export default function Home() {
+type Props = {
+  allImages: Image[];
+};
+
+export default function Home({ allImages }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
+
+  const [searchResults, setSearchResults] = useState(allImages);
+  const searchBarProps = {
+    allImages,
+    searchResults,
+    setSearchResults,
+  };
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -22,6 +36,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
+        <SearchBar {...searchBarProps} />
         <h1>Home</h1>
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
@@ -29,4 +44,16 @@ export default function Home() {
       </main>
     </>
   );
+}
+
+export async function getServerSideProps() {
+  const allImages = await prisma.image.findMany();
+  console.log(allImages);
+  return {
+    props: {
+      session: {
+        images: allImages,
+      },
+    },
+  };
 }

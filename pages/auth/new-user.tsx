@@ -22,7 +22,7 @@ export default function NewUser() {
 
     try {
       const body = { isOrg, orgName, orgDesc };
-      await fetch(`/api/onboarding`, {
+      await fetch(`/api/account/onboarding`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function NewUser() {
                 onChange={(e) => setOrgDesc(e.target.value)}
                 value={orgDesc}
                 name="desc"
-                id=""
+                id="desc"
                 cols={30}
                 rows={8}
               ></textarea>

@@ -26,11 +26,15 @@ Currently being developed by [@LucileTech](https://github.com/LucileTech), [@Fla
 ```shell
 cd v44-tier3-team-37
 ```
+
 4. Install dependencies
+
 ```
 npm i
 ```
+
 5. Provide environment variables
+
 ```
 GOOGLE_CLIENT_ID=
 GOOGLE_CLIENT_SECRET=
@@ -38,23 +42,32 @@ DATABASE_URL=
 MONGODB_URI=
 NEXTAUTH_SECRET=
 ```
+
 6. Generate Prisma schema
+
 ```
 npx prisma generate
 ```
+
 7. Run the app
 
 ```shell
 npm run dev
 ```
+
 ### Contributing
+
 1. Create a new branch
+
 ```shell
 git checkout -b 'your-branch-name'
 ```
+
 2. Make changes.
 3. Push your branch to the upstream repo
+
 ```shell
 git push origin your-branch-name
 ```
-🎉 Follow the link provided to create a pull request
+
+🎉 Follow the link provided to create a pull request 🎉

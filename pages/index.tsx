@@ -1,18 +1,19 @@
 import Head from "next/head";
 import prisma from "@/lib/prisma";
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
-import { Organization } from '@prisma/client';
-import { getServerSession } from "next-auth/next"
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { Organization } from "@prisma/client";
 
 
 import s from "@/styles/Home.module.css";
 
 type Image = {
-  _id: string,
+  id: string,
   uploaded_at: string,
   title: string,
   location: string,
@@ -26,21 +27,60 @@ type Image = {
 }
 
 interface ImagesProps {
-  allImages: Image,
-  organizationImages: Image
+  allImages: Image[],
+  organizationImages?: Image[],
+  userImages: Image[]
 }
 
-const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
+const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages }) => {
   const router = useRouter();
   const { data: session } = useSession();
+  let imageAlreadySaved: {} | undefined;
+  const [favoriteImages, setFavoriteImages] = useState<string[]>([]);
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
     router.push("/auth/new-user");
   }
 
-  console.log('session', session)
-  console.log('organizationImages', organizationImages)
+  const updateUserCollection = async (imageId: string) => {
+    imageAlreadySaved = userImages.find(image => image.id === imageId);
+
+    try {
+      const body = { imageId, imageAlreadySaved };
+
+      const response = await fetch(`/api/saveImage/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body),
+      })
+
+      if (response.ok) {
+        toggleFavorite(imageId);
+      }
+
+    } catch (error) {
+      console.error('Error saving/unsaving image', error)
+    }
+  }
+  
+  const favorited = (imageId: string) => {
+    return !!userImages.find(image => image.id === imageId)
+  }
+
+  const toggleFavorite = (imageId: string) => {
+    if (favorited(imageId)) {
+      const updatedFavorites = favoriteImages.filter(
+        (favoriteId) => favoriteId !== imageId
+      );
+      setFavoriteImages(updatedFavorites);
+    } else {
+      setFavoriteImages([...favoriteImages, imageId]);
+    }
+  };
+
 
   return (
     <>
@@ -57,11 +97,11 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
         ) : null}
         {session?.user.role === "ORG" &&
           <div className={s.collectionOuterContainer}>
-            {organizationImages.map(image => (
+            {organizationImages?.map(image => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt="" />
-                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                {/* <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> */}
+                <svg xmlns="http://www.w3.org/2000/svg" onClick={() => updateUserCollection(image.id)} className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
               </div>
             ))}
           </div>
@@ -71,8 +111,12 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages }) => {
             {allImages.map(image => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt="" />
-                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
-                {/* <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg> */}
+                {favorited(image.id)
+                  ?
+                  <svg xmlns="http://www.w3.org/2000/svg" onClick={() => updateUserCollection(image.id)} className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                  :
+                  <svg xmlns="http://www.w3.org/2000/svg" onClick={() => updateUserCollection(image.id)} className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                }
               </div>
             ))}
           </div>
@@ -88,23 +132,47 @@ export async function getServerSideProps(context: {
   authOptions: NextAuthOptions;
 }) {
 
-  // const session = await getServerSession(context.req, context.res, context.authOptions)
+  const session: Session | null = await getServerSession(
+    context.req,
+    context.res,
+    authOptions
+  );
 
   let allImages = await prisma.image.findMany();
-  let organizationImages;
+  let organizationImages = null;
+  let userImages = null;
 
-  // if (session.user.role === "ORG") {
-  organizationImages = await prisma.image.findMany({
-    where: {
-      // organizationId: session.user.id
-    }
-  })
-  // }
+  if (session && session.user.role === "ORG") {
+    const org = await prisma.organization.findFirst({
+      where: {
+        user: {
+          id: session.user.id,
+        },
+      },
+      include: {
+        images: true,
+      },
+    });
+    organizationImages = org?.images;
+  }
+
+  if (session && session.user.role === "USER") {
+    const user = await prisma.user.findFirst({
+      where: {
+        id: session.user.id
+      },
+      include: {
+        images: true
+      }
+    })
+    userImages = user?.images;
+  }
 
   return {
     props: {
       allImages,
       organizationImages,
+      userImages,
     },
   };
 }

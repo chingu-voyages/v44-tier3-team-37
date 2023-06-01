@@ -1,12 +1,18 @@
+.container {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    height: 37px;
+    gap: .5em;
+}
+
 .searchBar {
     background: var(--inputs);
     border-radius: 0.8em;
     position: relative;
     display: flex;
     align-items: center;
-    margin: auto;
-    width: 100%;
-    max-width: 500px;
+
 }
 
 .icon {

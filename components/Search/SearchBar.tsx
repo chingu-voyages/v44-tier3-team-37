@@ -1,4 +1,5 @@
 import { ChangeEvent, FormEvent, useState } from "react";
+import CustomSelect from "./Select";
 import { Image } from "@/lib/prisma";
 import { SearchIcon } from "./Icons";
 import s from "./SearchBar.module.css";
@@ -11,8 +12,6 @@ type Props = {
 
 function SearchBar({ searchResults, setSearchResults, allImages }: Props) {
   const [search, setSearch] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -20,19 +19,26 @@ function SearchBar({ searchResults, setSearchResults, allImages }: Props) {
 
   const handleSubmit = async (e: FormEvent<HTMLInputElement>) => {
     e.preventDefault();
+    const results = allImages.filter((image) =>
+      image.title.toLowerCase().includes(search)
+    );
+    setSearchResults(results);
   };
 
   return (
-    <div className={s.searchBar}>
-      <div className={s.icon}>
-        <SearchIcon />
+    <div className={s.container}>
+      <div className={s.searchBar}>
+        <div className={s.icon}>
+          <SearchIcon />
+        </div>
+        <input
+          onChange={handleChange}
+          onSubmit={handleSubmit}
+          type="text"
+          placeholder="Search images..."
+        />
       </div>
-      <input
-        onChange={handleChange}
-        onSubmit={handleSubmit}
-        type="text"
-        placeholder="Search images..."
-      />
+      <CustomSelect />
     </div>
   );
 }

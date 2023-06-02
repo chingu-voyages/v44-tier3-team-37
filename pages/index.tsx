@@ -36,7 +36,10 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
   const router = useRouter();
   const { data: session } = useSession();
   let imageAlreadySaved: {} | undefined;
-  const [favoriteImages, setFavoriteImages] = useState<string[]>([]);
+  const [favoriteImages, setFavoriteImages] = useState<string[]>(
+    userImages ? userImages?.map((image) => image.id) : []
+  );
+
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -44,7 +47,13 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
   }
 
   const updateUserCollection = async (imageId: string) => {
-    imageAlreadySaved = userImages.find(image => image.id === imageId);
+    imageAlreadySaved = favoriteImages.includes(imageId);
+
+        // update favoriteImages array
+        imageAlreadySaved
+        ? setFavoriteImages((cur) => cur.filter((id) => id !== imageId))
+        : setFavoriteImages((cur) => [...cur, imageId]);
+
 
     try {
       const body = { imageId, imageAlreadySaved };
@@ -57,29 +66,14 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
         body: JSON.stringify(body),
       })
 
-      if (response.ok) {
-        toggleFavorite(imageId);
-      }
-
     } catch (error) {
       console.error('Error saving/unsaving image', error)
     }
   }
-  
-  const favorited = (imageId: string) => {
-    return !!userImages.find(image => image.id === imageId)
-  }
 
-  const toggleFavorite = (imageId: string) => {
-    if (favorited(imageId)) {
-      const updatedFavorites = favoriteImages.filter(
-        (favoriteId) => favoriteId !== imageId
-      );
-      setFavoriteImages(updatedFavorites);
-    } else {
-      setFavoriteImages([...favoriteImages, imageId]);
-    }
-  };
+  const favorited = (imageId: string) => {
+    return !!favoriteImages.find(id => id === imageId)
+  }
 
 
   return (

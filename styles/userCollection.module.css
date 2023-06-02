@@ -5,21 +5,23 @@
     margin-top: 200px;
 }
 
-.userSavedImages {
+.userCollectionImagesContainer {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    /* max-width: 1300px; */
 }
 
-.userImageContainer {
+.userCollectionImageContainer {
     margin-left: 10px;
     margin-bottom: 10px;
     position: relative;
+    display: flex;
+    flex-direction: row;
+    max-width: 1300px;
 }
 
-.userImage {
+.userCollectionImage {
     height: 230px;
     width: 240px;
 }

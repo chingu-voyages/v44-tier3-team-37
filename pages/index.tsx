@@ -40,7 +40,6 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
     userImages ? userImages?.map((image) => image.id) : []
   );
 
-
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
     router.push("/auth/new-user");

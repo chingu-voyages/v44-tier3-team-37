@@ -3,15 +3,16 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import prisma from "@/lib/prisma";
-import type { Image } from "@/lib/prisma";
 import SearchBar from "@/components/Search/SearchBar";
 import s from "@/styles/Home.module.css";
+import { Tag, Image } from "@prisma/client";
 
 type Props = {
   allImages: Image[];
+  tags: Tag[];
 };
 
-export default function Home({ allImages }: Props) {
+export default function Home({ allImages, tags }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -20,6 +21,7 @@ export default function Home({ allImages }: Props) {
     allImages,
     searchResults,
     setSearchResults,
+    tags,
   };
 
   // if user role is NONE, route to onboarding form
@@ -48,12 +50,14 @@ export default function Home({ allImages }: Props) {
 
 export async function getServerSideProps() {
   const allImages = await prisma.image.findMany();
-  console.log(allImages);
+  const tags = await prisma.tag.findMany();
+  // console.log("tags", tags);
+  // console.log("allImages", allImages);
+
   return {
     props: {
-      session: {
-        images: allImages,
-      },
+      images: allImages,
+      tags: tags,
     },
   };
 }

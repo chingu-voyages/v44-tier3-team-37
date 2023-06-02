@@ -1,6 +1,6 @@
 import { ChangeEvent, FormEvent, useState } from "react";
 import CustomSelect from "./Select";
-import { Image } from "@/lib/prisma";
+import { Image, Tag } from "@prisma/client";
 import { SearchIcon } from "./Icons";
 import s from "./SearchBar.module.css";
 
@@ -8,9 +8,15 @@ type Props = {
   searchResults: any;
   setSearchResults: any;
   allImages: Image[];
+  tags: Tag[];
 };
 
-function SearchBar({ searchResults, setSearchResults, allImages }: Props) {
+function SearchBar({
+  searchResults,
+  setSearchResults,
+  allImages,
+  tags,
+}: Props) {
   const [search, setSearch] = useState("");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -38,7 +44,7 @@ function SearchBar({ searchResults, setSearchResults, allImages }: Props) {
           placeholder="Search images..."
         />
       </div>
-      <CustomSelect />
+      <CustomSelect tags={tags} />
     </div>
   );
 }

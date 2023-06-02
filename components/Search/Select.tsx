@@ -1,9 +1,24 @@
+import { Tag } from "@prisma/client";
 import React from "react";
 import Select from "react-select";
 
-const CustomSelect = () => {
+type Props = {
+  tags: Tag[];
+};
+
+const CustomSelect = ({ tags }: Props) => {
+  const options =
+    tags &&
+    tags.map((tag) => {
+      return {
+        value: tag.name,
+        label: tag.name,
+      };
+    });
+
   return (
     <Select
+      options={options}
       placeholder="Filter by tags"
       isMulti
       styles={{
@@ -33,6 +48,22 @@ const CustomSelect = () => {
           borderRadius: "0.8em",
           backgroundColor: "var(--inputs)",
         }),
+        option(base, props) {
+          return {
+            ...base,
+            color: props.isFocused
+              ? "var(--primary-text)"
+              : "var(--secondary-text)",
+            backgroundColor: props.isFocused
+              ? "var(--primary-color)"
+              : "var(--inputs)",
+            "&:active": {
+              backgroundColor: "var(--primary)",
+            },
+            borderRadius: "0.8em",
+            fontSize: "0.8em",
+          };
+        },
         input(base, props) {
           return {
             ...base,

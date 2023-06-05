@@ -92,7 +92,7 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
           <div className={s.collectionOuterContainer}>
             {organizationImages?.map(image => (
               <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt="" />
+                <img src={image.url} className={s.image} alt={image.alt} />
               </div>
             ))}
           </div>
@@ -101,7 +101,7 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
           <div className={s.collectionOuterContainer}>
             {allImages.map(image => (
               <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt="" />
+                <img src={image.url} className={s.image} alt={image.alt} />
                 {favorited(image.id)
                   ?
                   <svg xmlns="http://www.w3.org/2000/svg" onClick={() => updateUserCollection(image.id)} className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -116,7 +116,7 @@ const Home: React.FC<ImagesProps> = ({ allImages, organizationImages, userImages
           <div className={s.collectionOuterContainer}>
             {allImages.map(image => (
               <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt="" />
+                <img src={image.url} className={s.image} alt={image.alt} />
               </div>
             ))}
           </div>

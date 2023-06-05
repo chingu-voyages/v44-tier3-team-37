@@ -33,3 +33,22 @@
     margin-top: 8px;
     margin-right: 8px;
 }
+
+.favoriteIcon:hover {
+    cursor: pointer;
+}
+
+.noUserCollectionOuterContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.noUserCollectionText {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+.noUserCollectionButton:hover {
+    cursor: pointer;
+}

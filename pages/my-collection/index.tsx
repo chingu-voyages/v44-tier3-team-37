@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router'
 import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth";
@@ -27,6 +28,7 @@ interface ImagesProps {
 }
 
 const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
+  const router = useRouter();
   const { data: session, status } = useSession();
 
   let imageAlreadySaved: {} | undefined;
@@ -62,6 +64,10 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
     return !!favoriteImages.find(id => id === imageId)
   }
 
+  const routeToHomePage = () => {
+    router.push('/');
+  }
+
 
   return (
     <>
@@ -70,7 +76,7 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
           <div className={styles.userCollectionImagesContainer}>
             {userImages.map(image => (
               <div className={styles.userCollectionImageContainer} key={image.id}>
-                <img src={image.url} className={styles.userCollectionImage} alt="" />
+                <img src={image.url} className={styles.userCollectionImage} alt={image.alt} />
                 {favorited(image.id)
                   ?
                   <svg xmlns="http://www.w3.org/2000/svg" onClick={() => updateUserCollection(image.id)} className={styles.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="#5b7aa4" stroke="#5b7aa4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
@@ -79,6 +85,14 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
                 }
               </div>
             ))}
+          </div>
+        }
+        {!userImages.length &&
+          <div className={styles.noUserCollectionOuterContainer}>
+            <div className={styles.noUserCollectionText}>You have not saved any images to your collection</div>
+            <div>
+              <button onClick={() => routeToHomePage()} className={styles.noUserCollectionButton}>Find images</button>
+            </div>
           </div>
         }
       </div>

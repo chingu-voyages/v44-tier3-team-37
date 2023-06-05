@@ -6,10 +6,11 @@ import prisma from "@/lib/prisma";
 import SearchBar from "@/components/Search/SearchBar";
 import s from "@/styles/Home.module.css";
 import { Tag, Image } from "@prisma/client";
+import { TagWithImages } from "@/types/types";
 
 type Props = {
   allImages: Image[];
-  tags: Tag[];
+  tags: TagWithImages[];
 };
 
 export default function Home({ allImages, tags }: Props) {
@@ -43,6 +44,12 @@ export default function Home({ allImages, tags }: Props) {
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
+        {searchResults &&
+          searchResults.map((image) => (
+            <div key={image.id}>
+              <h2>{image.title}</h2>
+            </div>
+          ))}
       </main>
     </>
   );
@@ -50,13 +57,17 @@ export default function Home({ allImages, tags }: Props) {
 
 export async function getServerSideProps() {
   const allImages = await prisma.image.findMany();
-  const tags = await prisma.tag.findMany();
+  const tags = await prisma.tag.findMany({
+    include: {
+      images: true,
+    },
+  });
   // console.log("tags", tags);
   // console.log("allImages", allImages);
 
   return {
     props: {
-      images: allImages,
+      allImages: allImages,
       tags: tags,
     },
   };

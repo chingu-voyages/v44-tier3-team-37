@@ -1,26 +1,41 @@
+import { TagWithImages } from "@/types/types";
 import { Tag } from "@prisma/client";
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import Select from "react-select";
+import type { MultiValue } from "react-select";
 
 type Props = {
-  tags: Tag[];
+  tags: TagWithImages[];
+  setSelectedTags: Dispatch<SetStateAction<TagWithImages[]>>;
 };
 
-const CustomSelect = ({ tags }: Props) => {
+type OptionType = { id: string; value: string; label: string };
+
+const CustomSelect = ({ tags, setSelectedTags }: Props) => {
   const options =
     tags &&
     tags.map((tag) => {
       return {
+        id: tag.id,
         value: tag.name,
         label: tag.name,
       };
     });
 
+  const onChange = (selectedOption: MultiValue<OptionType>) => {
+    if (Array.isArray(selectedOption)) {
+      const selectedIds = selectedOption.map((option) => option.id);
+      setSelectedTags(tags.filter((tag) => selectedIds.includes(tag.id)));
+    }
+  };
+
   return (
     <Select
       options={options}
+      onChange={onChange}
       placeholder="Filter by tags"
       isMulti
+      captureMenuScroll={true}
       styles={{
         container: (base, state) => ({
           ...base,

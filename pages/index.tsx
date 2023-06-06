@@ -115,11 +115,9 @@ const Home: React.FC<ImagesProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
-        <SearchBar {...searchBarProps} />
+        {session && <SearchBar {...searchBarProps} />}
         <h1>Home</h1>
-        {session?.user ? (
-          <p>You are signed in as a {session.user.role}</p>
-        ) : null}
+        {session !== null && <p>You are signed in as a {session.user.role}</p>}
         {session?.user.role === "ORG" && (
           <div className={s.collectionOuterContainer}>
             {displayedImages?.map((image) => (

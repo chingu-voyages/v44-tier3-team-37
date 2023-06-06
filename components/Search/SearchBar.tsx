@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import CustomSelect from "./Select";
+
 import { Image } from "@/pages/index";
 import { TagWithImages } from "@/pages/index";
 import { SearchIcon } from "./Icons";
@@ -50,7 +50,6 @@ function SearchBar({
           placeholder="Search images..."
         />
       </div>
-      <CustomSelect tags={tagsWithImages} setSelectedTags={setSelectedTags} />
     </div>
   );
 }

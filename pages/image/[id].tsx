@@ -9,6 +9,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
+import styles from "../../styles/oneImage.module.css";
 
 import s from "@/styles/Home.module.css";
 
@@ -32,16 +33,23 @@ interface ImagesProps {
   userImages: Image[];
 }
 
-const Home: React.FC<ImagesProps> = ({
+const ImageDetails: React.FC<ImagesProps> = ({
   allImages,
   organizationImages,
   userImages,
 }) => {
   const router = useRouter();
+  const { id } = router.query;
   const { data: session } = useSession();
   let imageAlreadySaved: {} | undefined;
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
+  );
+
+  // To filter one image from all images
+  let imageFiltered = [...allImages];
+  imageFiltered = imageFiltered.filter((element) =>
+    element.id.includes(`${id}`)
   );
 
   // if user role is NONE, route to onboarding form
@@ -85,72 +93,60 @@ const Home: React.FC<ImagesProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
-        <h1>Home</h1>
-        {session?.user ? (
-          <p>You are signed in as a {session.user.role}</p>
-        ) : null}
-        {session?.user.role === "ORG" && (
-          <div className={s.collectionOuterContainer}>
-            {organizationImages?.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
+        <div className={styles.imageDetailsPage}>
+          {imageFiltered.map((image) => (
+            <div className={styles.imagePresentation} key={image.id}>
+              <img
+                src={image.url}
+                className={styles.imgDetail}
+                alt={image.alt}
+              />
+
+              <div className={styles.imageDetails}>
+                <h2 className={styles.imageDetailsTitle}>{image.title}</h2>
+                {favorited(image.id) ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => updateUserCollection(image.id)}
+                    className={styles.favoriteIcon}
+                    width="23"
+                    height="23"
+                    viewBox="0 0 24 24"
+                    fill="#5b7aa4"
+                    stroke="#5b7aa4"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => updateUserCollection(image.id)}
+                    className={styles.favoriteIcon}
+                    width="23"
+                    height="23"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6eadf4"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                )}
+                <p className={styles.imageDetailsDescription}>
+                  {image.location}
+                </p>
+                <p className={styles.imageDetailsDescription}>
+                  {image.description}
+                </p>
               </div>
-            ))}
-          </div>
-        )}
-        {session?.user.role === "USER" && (
-          <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
-              <Link href={`/image/${image.id}`} key={image.id}>
-                <div className={s.imageContainer} key={image.id}>
-                  <img src={image.url} className={s.image} alt={image.alt} />
-                  {favorited(image.id) ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={() => updateUserCollection(image.id)}
-                      className={s.favoriteIcon}
-                      width="23"
-                      height="23"
-                      viewBox="0 0 24 24"
-                      fill="#5b7aa4"
-                      stroke="#5b7aa4"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={() => updateUserCollection(image.id)}
-                      className={s.favoriteIcon}
-                      width="23"
-                      height="23"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#6eadf4"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  )}
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
-        {!session?.user.role && (
-          <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
-              </div>
-            ))}
-          </div>
-        )}
+            </div>
+          ))}
+        </div>
       </main>
     </>
   );
@@ -206,4 +202,4 @@ export async function getServerSideProps(context: {
   };
 }
 
-export default Home;
+export default ImageDetails;

@@ -1,5 +1,5 @@
-import { TagWithImages } from "@/types/types";
-import { Tag } from "@prisma/client";
+import { TagWithImages } from "@/pages/index";
+
 import React, { Dispatch, SetStateAction } from "react";
 import Select from "react-select";
 import type { MultiValue } from "react-select";

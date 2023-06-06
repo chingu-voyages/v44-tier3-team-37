@@ -1,32 +1,36 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import CustomSelect from "./Select";
-import { Image } from "@prisma/client";
-import { TagWithImages } from "@/types/types";
+import { Image } from "@/pages/index";
+import { TagWithImages } from "@/pages/index";
 import { SearchIcon } from "./Icons";
 import s from "./SearchBar.module.css";
 
 type Props = {
-  searchResults: any;
-  setSearchResults: any;
-  allImages: Image[];
-  tags: TagWithImages[];
+  displayedImages: Image[];
+  setDisplayedImages: React.Dispatch<React.SetStateAction<Image[]>>;
+  images: Image[];
+  tagsWithImages: TagWithImages[];
 };
 
 function SearchBar({
-  searchResults,
-  setSearchResults,
-  allImages,
-  tags,
+  displayedImages,
+  setDisplayedImages,
+  images,
+  tagsWithImages,
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedTags, setSelectedTags] = useState<TagWithImages[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearch(e.target.value);
-    const results = allImages.filter((image) =>
-      image.title.toLowerCase().includes(e.target.value.toLowerCase())
+    const searchValue = e.target.value.toLowerCase();
+    setSearch(searchValue);
+
+    const results = images.filter(
+      (image) =>
+        image.title.toLowerCase().includes(searchValue) ||
+        image.description.toLowerCase().includes(searchValue)
     );
-    setSearchResults(results);
+    setDisplayedImages(results);
   };
 
   return (
@@ -42,7 +46,7 @@ function SearchBar({
           placeholder="Search images..."
         />
       </div>
-      <CustomSelect tags={tags} setSelectedTags={setSelectedTags} />
+      <CustomSelect tags={tagsWithImages} setSelectedTags={setSelectedTags} />
     </div>
   );
 }

@@ -37,6 +37,8 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
     userImages ? userImages?.map((image) => image.id) : []
   );
 
+  if (!userImages) return null;
+
   const updateUserCollection = async (imageId: string) => {
     imageAlreadySaved = favoriteImages.includes(imageId);
 

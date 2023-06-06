@@ -37,8 +37,6 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
     userImages ? userImages?.map((image) => image.id) : []
   );
 
-  if (!userImages) return null;
-
   const updateUserCollection = async (imageId: string) => {
     imageAlreadySaved = favoriteImages.includes(imageId);
 
@@ -89,7 +87,7 @@ const UserCollection: React.FC<ImagesProps> = ({ userImages }) => {
             ))}
           </div>
         }
-        {!userImages.length &&
+        {userImages && !userImages.length &&
           <div className={styles.noUserCollectionOuterContainer}>
             <div className={styles.noUserCollectionText}>You have not saved any images to your collection</div>
             <div>

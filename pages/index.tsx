@@ -94,6 +94,7 @@ const Home: React.FC<ImagesProps> = ({
             {organizationImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
+                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
               </div>
             ))}
           </div>
@@ -112,8 +113,8 @@ const Home: React.FC<ImagesProps> = ({
                       width="23"
                       height="23"
                       viewBox="0 0 24 24"
-                      fill="#5b7aa4"
-                      stroke="#5b7aa4"
+                      fill="#6eadf4"
+                      stroke="#6eadf4"
                       strokeWidth="2"
                       strokeLinecap="round"
                       strokeLinejoin="round"

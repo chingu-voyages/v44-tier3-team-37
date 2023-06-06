@@ -115,20 +115,6 @@ export async function getServerSideProps(context: {
 
   let userImages = null;
 
-  // if (session && session.user.role === "ORG") {
-  //   const org = await prisma.organization.findFirst({
-  //     where: {
-  //       user: {
-  //         id: session.user.id,
-  //       },
-  //     },
-  //     include: {
-  //       images: true,
-  //     },
-  //   });
-  //   organizationImages = org?.images;
-  // }
-
   if (session && session.user.role === "USER") {
     const user = await prisma.user.findFirst({
       where: {

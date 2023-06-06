@@ -9,10 +9,11 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
+import SearchBar from "@/components/Search/SearchBar";
 
 import s from "@/styles/Home.module.css";
 
-type Image = {
+export type Image = {
   id: string;
   uploaded_at: string;
   title: string;
@@ -26,16 +27,24 @@ type Image = {
   userId: string;
 };
 
+export type TagWithImages = {
+  id: string;
+  name: string;
+  images: Image[];
+};
+
 interface ImagesProps {
   allImages: Image[];
   organizationImages?: Image[];
   userImages: Image[];
+  tagsWithImages: TagWithImages[];
 }
 
 const Home: React.FC<ImagesProps> = ({
   allImages,
   organizationImages,
   userImages,
+  tagsWithImages,
 }) => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -43,6 +52,20 @@ const Home: React.FC<ImagesProps> = ({
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
   );
+
+  const [initialImages, setInitialImages] = useState<Image[]>([]);
+  const [displayedImages, setDisplayedImages] =
+    useState<Image[]>(initialImages);
+
+  useEffect(() => {
+    if (session?.user.role === "ORG") {
+      setInitialImages(organizationImages || []);
+      setDisplayedImages(organizationImages || []);
+    } else {
+      setInitialImages(allImages);
+      setDisplayedImages(allImages);
+    }
+  }, [session?.user.role]);
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -76,6 +99,13 @@ const Home: React.FC<ImagesProps> = ({
     return !!favoriteImages.find((id) => id === imageId);
   };
 
+  const searchBarProps = {
+    initialImages,
+    displayedImages,
+    setDisplayedImages,
+    tagsWithImages,
+  };
+  if (session === undefined) return <div>loading...</div>;
   return (
     <>
       <Head>
@@ -85,13 +115,14 @@ const Home: React.FC<ImagesProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
+        <SearchBar {...searchBarProps} />
         <h1>Home</h1>
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
         {session?.user.role === "ORG" && (
           <div className={s.collectionOuterContainer}>
-            {organizationImages?.map((image) => (
+            {displayedImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
               </div>
@@ -100,7 +131,7 @@ const Home: React.FC<ImagesProps> = ({
         )}
         {session?.user.role === "USER" && (
           <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
+            {displayedImages.map((image) => (
               <Link href={`/image/${image.id}`} key={image.id}>
                 <div className={s.imageContainer} key={image.id}>
                   <img src={image.url} className={s.image} alt={image.alt} />
@@ -167,6 +198,12 @@ export async function getServerSideProps(context: {
     authOptions
   );
 
+  const tagsWithImages = await prisma.tag.findMany({
+    include: {
+      images: true,
+    },
+  });
+
   let allImages = await prisma.image.findMany();
   let organizationImages = null;
   let userImages = null;
@@ -202,6 +239,7 @@ export async function getServerSideProps(context: {
       allImages,
       organizationImages,
       userImages,
+      tagsWithImages,
     },
   };
 }

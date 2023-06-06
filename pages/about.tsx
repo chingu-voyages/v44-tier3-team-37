@@ -10,9 +10,9 @@ const About: React.FC = () => {
       <div className={styles.about}>
         <p>
           Welcome to Image Vault, a place for museums, archives, and cultural
-          organizations to share their collections. Whether you're searching for
-          historical gems or contemporary visual content, Image Vault offers an
-          extensive collection that is entirely free of rights.
+          organizations to share their collections. Whether you&apos;re
+          searching for historical gems or contemporary visual content, Image
+          Vault offers an extensive collection that is entirely free of rights.
         </p>
         <p>
           At Image Vault, we understand the importance of visual media in
@@ -29,12 +29,12 @@ const About: React.FC = () => {
           themes.
         </p>
         <p>
-          If you're a content creator looking to share your work with the world,
-          Image Vault provides a convenient platform to showcase your talent.
-          Upload your own images, photos, videos, or archives, and contribute to
-          our ever-expanding collection. With our commitment to free rights, you
-          can share your creations without worrying about copyright
-          restrictions.
+          If you&apos;re a content creator looking to share your work with the
+          world, Image Vault provides a convenient platform to showcase your
+          talent. Upload your own images, photos, videos, or archives, and
+          contribute to our ever-expanding collection. With our commitment to
+          free rights, you can share your creations without worrying about
+          copyright restrictions.
         </p>
         <p>
           We believe in promoting the spirit of collaboration and knowledge
@@ -57,10 +57,11 @@ const About: React.FC = () => {
           platform.
         </p>
         <p>
-          So, whether you're a history buff, a creative professional, or simply
-          someone in search of captivating visuals, Image Vault is the go-to
-          destination for all your visual content needs. Start exploring today
-          and unlock a world of free, rights-free imagery at your fingertips.
+          So, whether you&apos;re a history buff, a creative professional, or
+          simply someone in search of captivating visuals, Image Vault is the
+          go-to destination for all your visual content needs. Start exploring
+          today and unlock a world of free, rights-free imagery at your
+          fingertips.
         </p>
       </div>
     </>

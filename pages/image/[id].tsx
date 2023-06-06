@@ -8,11 +8,12 @@ import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Organization } from "@prisma/client";
-import Link from "next/link";import SearchBar from "@/components/Search/SearchBar";
+import Link from "next/link";
+import styles from "../../styles/oneImage.module.css";
 
 import s from "@/styles/Home.module.css";
 
-export type Image = {
+type Image = {
   id: string;
   uploaded_at: string;
   title: string;
@@ -26,36 +27,29 @@ export type Image = {
   userId: string;
 };
 
-export type TagWithImages = {
-  id: string;
-  name: string;
-  images: Image[];
-};
-
 interface ImagesProps {
   allImages: Image[];
-  organizationImages: Image[];
+  organizationImages?: Image[];
   userImages: Image[];
-  tagsWithImages: TagWithImages[];
 }
 
-const Home: React.FC<ImagesProps> = ({
+const ImageDetails: React.FC<ImagesProps> = ({
   allImages,
   organizationImages,
   userImages,
-  tagsWithImages,
 }) => {
   const router = useRouter();
+  const { id } = router.query;
   const { data: session } = useSession();
   let imageAlreadySaved: {} | undefined;
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
   );
 
-  const images = session?.user.role === "USER" ? allImages : organizationImages;
-
-  const [displayedImages, setDisplayedImages] = useState<Image[]>(
-    images ? images : []
+  // To filter one image from all images
+  let imageFiltered = [...allImages];
+  imageFiltered = imageFiltered.filter((element) =>
+    element.id.includes(`${id}`)
   );
 
   // if user role is NONE, route to onboarding form
@@ -87,16 +81,8 @@ const Home: React.FC<ImagesProps> = ({
   };
 
   const favorited = (imageId: string) => {
-    return !!favoriteImages.find(((id)) => id === imageId);
+    return !!favoriteImages.find((id) => id === imageId);
   };
-
-  const searchBarProps = {
-    displayedImages,
-    setDisplayedImages,
-    images,
-    tagsWithImages,;
-  };;
-  if (session === undefined) return <div>Loading...</div>;
 
   return (
     <>
@@ -107,33 +93,22 @@ const Home: React.FC<ImagesProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
-        <SearchBar {...searchBarProps} />
-        <h1>Home</h1>
-        {session?.user ? (
-          <p>You are signed in as a {session.user.role}</p>
-        ) : null}
-        {session?.user.role === "ORG" && (
-        {session?.user.role === "ORG" && (
-          <div className={s.collectionOuterContainer}>
-            {displayedImages.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
-              </div>
-            ))}
-          </div>
-        )}
-        {session?.user.role === "USER" && (
-        )}
-        {session?.user.role === "USER" && (
-          <div className={s.collectionOuterContainer}>
-            {displayedImages.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
+        <div className={styles.imageDetailsPage}>
+          {imageFiltered.map((image) => (
+            <div className={styles.imagePresentation} key={image.id}>
+              <img
+                src={image.url}
+                className={styles.imgDetail}
+                alt={image.alt}
+              />
+
+              <div className={styles.imageDetails}>
+                <h2 className={styles.imageDetailsTitle}>{image.title}</h2>
                 {favorited(image.id) ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     onClick={() => updateUserCollection(image.id)}
-                    className={s.favoriteIcon}
+                    className={styles.favoriteIcon}
                     width="23"
                     height="23"
                     viewBox="0 0 24 24"
@@ -149,7 +124,7 @@ const Home: React.FC<ImagesProps> = ({
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     onClick={() => updateUserCollection(image.id)}
-                    className={s.favoriteIcon}
+                    className={styles.favoriteIcon}
                     width="23"
                     height="23"
                     viewBox="0 0 24 24"
@@ -162,27 +137,19 @@ const Home: React.FC<ImagesProps> = ({
                     <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
                   </svg>
                 )}
+                <p className={styles.imageDetailsDescription}>
+                  {image.location}
+                </p>
+                <p className={styles.imageDetailsDescription}>
+                  {image.description}
+                </p>
               </div>
-            ))}
-          </div>
-        )}
-        {!session?.user.role && (
-        )}
-        {!session?.user.role && (
-          <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
-            {allImages.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
-              </div>
-            ))}
-          </div>
-        )}
-        )}
+            </div>
+          ))}
+        </div>
       </main>
     </>
   );
-};
 };
 
 export async function getServerSideProps(context: {
@@ -196,11 +163,6 @@ export async function getServerSideProps(context: {
     authOptions
   );
 
-  const tagsWithImages = await prisma.tag.findMany({
-    include: {
-      images: true,
-    },
-  });
   let allImages = await prisma.image.findMany();
   let organizationImages = null;
   let userImages = null;
@@ -216,13 +178,12 @@ export async function getServerSideProps(context: {
         images: true,
       },
     });
-    organizationImages = org?.images ?? [];
+    organizationImages = org?.images;
   }
 
   if (session && session.user.role === "USER") {
     const user = await prisma.user.findFirst({
       where: {
-        id: session.user.id,
         id: session.user.id,
       },
       include: {
@@ -237,9 +198,8 @@ export async function getServerSideProps(context: {
       allImages,
       organizationImages,
       userImages,
-      tagsWithImages,
     },
   };
 }
 
-export default Home;
+export default ImageDetails;

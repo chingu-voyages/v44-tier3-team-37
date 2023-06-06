@@ -1,0 +1,48 @@
+.oneImageDetailed {
+  height: 60vh;
+}
+
+.imgDetail {
+  width: 40vw;
+}
+
+.imageDetailsPage {
+  display: flex;
+  flex-direction: column;
+  width: 80vw;
+  height: 70vh;
+  justify-content: center;
+}
+
+.imagePresentation {
+  display: flex;
+  flex-direction: row;
+  width: 80vw;
+  justify-content: space-around;
+}
+
+.imagePicture {
+  width: 30vw;
+  object-fit: cover;
+  margin-left: 10%;
+  margin-right: 5%;
+  margin-top: 5%;
+  margin-bottom: 5%;
+}
+
+.imageDetails {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5%;
+  padding-bottom: 5%;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.imageDetailsTitle {
+  margin-bottom: 5%;
+}
+
+.imageDetailsDescription {
+  width: 75%;
+}

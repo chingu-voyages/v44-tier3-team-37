@@ -5,3 +5,40 @@
   gap: 0.4em;
   width: 100%;
 }
+
+.collectionOuterContainer {
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
+  margin-top: 40px;
+  max-width: 1300px;
+  flex-wrap: wrap;
+}
+
+.imageContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  position: relative;
+  margin-left: 10px;
+  margin-bottom: 10px;
+}
+
+.image {
+  height: 240px;
+  width: 240px;
+}
+
+.favoriteIcon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 8px;
+  margin-right: 8px;
+}
+
+.favoriteIcon:hover {
+  cursor: pointer;
+}

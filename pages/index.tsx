@@ -99,6 +99,11 @@ const Home: React.FC<ImagesProps> = ({
     return !!favoriteImages.find((id) => id === imageId);
   };
 
+
+  const routeToImageDetails = (imageId: number) => {
+    router.push(`/image/${imageId}`)
+  }
+    
   const searchBarProps = {
     initialImages,
     displayedImages,
@@ -106,6 +111,7 @@ const Home: React.FC<ImagesProps> = ({
     tagsWithImages,
   };
   if (session === undefined) return <div>loading...</div>;
+
   return (
     <>
       <Head>
@@ -130,45 +136,43 @@ const Home: React.FC<ImagesProps> = ({
         )}
         {session?.user.role === "USER" && (
           <div className={s.collectionOuterContainer}>
-            {displayedImages.map((image) => (
-              <Link href={`/image/${image.id}`} key={image.id}>
-                <div className={s.imageContainer} key={image.id}>
-                  <img src={image.url} className={s.image} alt={image.alt} />
-                  {favorited(image.id) ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={() => updateUserCollection(image.id)}
-                      className={s.favoriteIcon}
-                      width="23"
-                      height="23"
-                      viewBox="0 0 24 24"
-                      fill="#6eadf4"
-                      stroke="#6eadf4"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      onClick={() => updateUserCollection(image.id)}
-                      className={s.favoriteIcon}
-                      width="23"
-                      height="23"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#6eadf4"
-                      strokeWidth="2.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                    </svg>
-                  )}
-                </div>
-              </Link>
+            {allImages.map((image) => (
+              <div className={s.imageContainer} key={image.id}>
+                <img onClick={() => routeToImageDetails(image.id)} src={image.url} className={s.image} alt={image.alt} />
+                {favorited(image.id) ? (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => updateUserCollection(image.id)}
+                    className={s.favoriteIcon}
+                    width="23"
+                    height="23"
+                    viewBox="0 0 24 24"
+                    fill="#6eadf4"
+                    stroke="#6eadf4"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                ) : (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    onClick={() => updateUserCollection(image.id)}
+                    className={s.favoriteIcon}
+                    width="23"
+                    height="23"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="#6eadf4"
+                    strokeWidth="2.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                )}
+              </div>
             ))}
           </div>
         )}

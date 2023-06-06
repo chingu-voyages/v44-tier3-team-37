@@ -8,11 +8,6 @@ import s from "@/styles/Home.module.css";
 import { Tag, Image } from "@prisma/client";
 import { TagWithImages } from "@/types/types";
 
-type Props = {
-  allImages: Image[];
-  tags: TagWithImages[];
-};
-
 export default function Home({ allImages, tags }: Props) {
   const router = useRouter();
   const { data: session } = useSession();
@@ -44,31 +39,7 @@ export default function Home({ allImages, tags }: Props) {
         {session?.user ? (
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
-        {searchResults &&
-          searchResults.map((image) => (
-            <div key={image.id}>
-              <h2>{image.title}</h2>
-            </div>
-          ))}
       </main>
     </>
   );
-}
-
-export async function getServerSideProps() {
-  const allImages = await prisma.image.findMany();
-  const tags = await prisma.tag.findMany({
-    include: {
-      images: true,
-    },
-  });
-  // console.log("tags", tags);
-  // console.log("allImages", allImages);
-
-  return {
-    props: {
-      allImages: allImages,
-      tags: tags,
-    },
-  };
 }

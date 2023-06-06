@@ -51,13 +51,22 @@ async function download(
   setIsDownloading(true);
 
   try {
-    const image = await fetch(imageUrl);
+    const response = await fetch("/api/image/download", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ imageUrl }),
+    });
+
+    const signedImageURL = await response.json();
+    const filetype = imageUrl.substring(imageUrl.lastIndexOf(".") + 1);
+    imageName = imageName.replaceAll(" ", "-");
+    const image = await fetch(signedImageURL, { method: "GET" });
     const imageBlob = await image.blob();
-    console.log(imageBlob);
     const link = document.createElement("a");
     link.href = URL.createObjectURL(imageBlob);
-    link.download = `${imageName}.png`;
-
+    link.download = `${imageName}.${filetype}`;
     link.setAttribute("aria-hidden", "true");
     link.style.display = "none";
 

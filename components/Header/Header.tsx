@@ -18,9 +18,16 @@ function Header() {
 
   return (
     <header className={styles.header}>
-      <h1>
-        <Link href="/">Image Vault</Link>
-      </h1>
+      <div className={styles.logoDisplay}>
+        <img
+          src="https://res.cloudinary.com/dsioshcio/image/upload/v1686075174/image-vault-logo-dall-e_rouaim.png"
+          className={styles.logo}
+          alt="logo"
+        />
+        <h1>
+          <Link href="/">Image Vault</Link>
+        </h1>
+      </div>
       <nav>
         <ul>
           {session && currentPath !== "/auth/new-user" ? (

@@ -1,7 +1,33 @@
 .footer {
   background-color: var(--footer);
   padding: 2em 4em;
+  font-size: 0.7rem;
 }
 .footer h2 {
-  font-size: 1.2em;
+  font-size: 1.4em;
+}
+
+.logo {
+  width: 40px;
+}
+
+.upPartFooter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.firstPartFooter {
+  display: flex;
+  flex-direction: column;
+}
+
+.logoAndName {
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 1vh;
+}
+
+.line {
+  margin-top: 1vh;
+  margin-bottom: 1vh;
 }

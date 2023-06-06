@@ -22,3 +22,12 @@
 .header a {
   font-size: 0.95em;
 }
+
+.logo {
+  height: 40px;
+}
+
+.logoDisplay {
+  display: flex;
+  justify-content: row;
+}

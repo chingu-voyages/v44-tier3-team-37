@@ -6,16 +6,16 @@ import { SearchIcon } from "./Icons";
 import s from "./SearchBar.module.css";
 
 type Props = {
+  initialImages: Image[];
   displayedImages: Image[];
   setDisplayedImages: React.Dispatch<React.SetStateAction<Image[]>>;
-  images: Image[];
   tagsWithImages: TagWithImages[];
 };
 
 function SearchBar({
+  initialImages,
   displayedImages,
   setDisplayedImages,
-  images,
   tagsWithImages,
 }: Props) {
   const [search, setSearch] = useState("");
@@ -25,12 +25,16 @@ function SearchBar({
     const searchValue = e.target.value.toLowerCase();
     setSearch(searchValue);
 
-    const results = images.filter(
+    const results = initialImages.filter(
       (image) =>
         image.title.toLowerCase().includes(searchValue) ||
         image.description.toLowerCase().includes(searchValue)
     );
-    setDisplayedImages(results);
+    if (search.length === 0) {
+      setDisplayedImages(initialImages);
+    } else {
+      setDisplayedImages(results);
+    }
   };
 
   return (

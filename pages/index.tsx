@@ -8,7 +8,8 @@ import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Organization } from "@prisma/client";
-import Link from "next/link";import SearchBar from "@/components/Search/SearchBar";
+import Link from "next/link";
+import SearchBar from "@/components/Search/SearchBar";
 
 import s from "@/styles/Home.module.css";
 
@@ -34,7 +35,7 @@ export type TagWithImages = {
 
 interface ImagesProps {
   allImages: Image[];
-  organizationImages: Image[];
+  organizationImages?: Image[];
   userImages: Image[];
   tagsWithImages: TagWithImages[];
 }
@@ -52,11 +53,19 @@ const Home: React.FC<ImagesProps> = ({
     userImages ? userImages?.map((image) => image.id) : []
   );
 
-  const images = session?.user.role === "USER" ? allImages : organizationImages;
+  const [initialImages, setInitialImages] = useState<Image[]>([]);
+  const [displayedImages, setDisplayedImages] =
+    useState<Image[]>(initialImages);
 
-  const [displayedImages, setDisplayedImages] = useState<Image[]>(
-    images ? images : []
-  );
+  useEffect(() => {
+    if (session?.user.role === "ORG") {
+      setInitialImages(organizationImages || []);
+      setDisplayedImages(organizationImages || []);
+    } else {
+      setInitialImages(allImages);
+      setDisplayedImages(allImages);
+    }
+  }, [session?.user.role]);
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -87,17 +96,16 @@ const Home: React.FC<ImagesProps> = ({
   };
 
   const favorited = (imageId: string) => {
-    return !!favoriteImages.find(((id)) => id === imageId);
+    return !!favoriteImages.find((id) => id === imageId);
   };
 
   const searchBarProps = {
+    initialImages,
     displayedImages,
     setDisplayedImages,
-    images,
-    tagsWithImages,;
-  };;
-  if (session === undefined) return <div>Loading...</div>;
-
+    tagsWithImages,
+  };
+  if (session === undefined) return <div>loading...</div>;
   return (
     <>
       <Head>
@@ -113,9 +121,8 @@ const Home: React.FC<ImagesProps> = ({
           <p>You are signed in as a {session.user.role}</p>
         ) : null}
         {session?.user.role === "ORG" && (
-        {session?.user.role === "ORG" && (
           <div className={s.collectionOuterContainer}>
-            {displayedImages.map((image) => (
+            {displayedImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
               </div>
@@ -123,66 +130,61 @@ const Home: React.FC<ImagesProps> = ({
           </div>
         )}
         {session?.user.role === "USER" && (
-        )}
-        {session?.user.role === "USER" && (
           <div className={s.collectionOuterContainer}>
             {displayedImages.map((image) => (
-              <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
-                {favorited(image.id) ? (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    onClick={() => updateUserCollection(image.id)}
-                    className={s.favoriteIcon}
-                    width="23"
-                    height="23"
-                    viewBox="0 0 24 24"
-                    fill="#5b7aa4"
-                    stroke="#5b7aa4"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                ) : (
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    onClick={() => updateUserCollection(image.id)}
-                    className={s.favoriteIcon}
-                    width="23"
-                    height="23"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#6eadf4"
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  >
-                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                  </svg>
-                )}
-              </div>
+              <Link href={`/image/${image.id}`} key={image.id}>
+                <div className={s.imageContainer} key={image.id}>
+                  <img src={image.url} className={s.image} alt={image.alt} />
+                  {favorited(image.id) ? (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={() => updateUserCollection(image.id)}
+                      className={s.favoriteIcon}
+                      width="23"
+                      height="23"
+                      viewBox="0 0 24 24"
+                      fill="#5b7aa4"
+                      stroke="#5b7aa4"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  ) : (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      onClick={() => updateUserCollection(image.id)}
+                      className={s.favoriteIcon}
+                      width="23"
+                      height="23"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#6eadf4"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                  )}
+                </div>
+              </Link>
             ))}
           </div>
-        )}
-        {!session?.user.role && (
         )}
         {!session?.user.role && (
           <div className={s.collectionOuterContainer}>
             {allImages.map((image) => (
-            {allImages.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
               </div>
             ))}
           </div>
-        )}
         )}
       </main>
     </>
   );
-};
 };
 
 export async function getServerSideProps(context: {
@@ -201,6 +203,7 @@ export async function getServerSideProps(context: {
       images: true,
     },
   });
+
   let allImages = await prisma.image.findMany();
   let organizationImages = null;
   let userImages = null;
@@ -216,13 +219,12 @@ export async function getServerSideProps(context: {
         images: true,
       },
     });
-    organizationImages = org?.images ?? [];
+    organizationImages = org?.images;
   }
 
   if (session && session.user.role === "USER") {
     const user = await prisma.user.findFirst({
       where: {
-        id: session.user.id,
         id: session.user.id,
       },
       include: {

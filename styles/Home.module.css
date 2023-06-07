@@ -42,3 +42,12 @@
 .favoriteIcon:hover {
   cursor: pointer;
 }
+
+.uploadBtn {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 37px;
+  gap: 0.5em;
+  margin-top: 0.5em;
+}

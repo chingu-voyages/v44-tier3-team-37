@@ -100,7 +100,7 @@ const Home: React.FC<ImagesProps> = ({
     return !!favoriteImages.find((id) => id === imageId);
   };
 
-  const routeToImageDetails = (imageId: number) => {
+  const routeToImageDetails = (imageId: string) => {
     router.push(`/image/${imageId}`);
   };
 

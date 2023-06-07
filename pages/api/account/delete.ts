@@ -21,6 +21,18 @@ export default async function handle(
     } catch (error) {
       res.status(405).send(error);
     }
+  }
+  if (isOrg) {
+    try {
+      const deleteOrgImage = await prisma.image.delete({
+        where: {
+          id: session.user?.id,
+        },
+      });
+      res.status(204).send({ message: "Images successfully deleted" });
+    } catch (error) {
+      res.status(405).send(error);
+    }
   } else {
     res.status(401).send({ message: "Unauthorized" });
   }

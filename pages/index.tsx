@@ -144,6 +144,7 @@ const Home: React.FC<ImagesProps> = ({
                   className={s.image}
                   alt={image.alt}
                 />
+                <p>{image.title}</p>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   className={s.favoriteIcon}
@@ -172,6 +173,7 @@ const Home: React.FC<ImagesProps> = ({
                   className={s.image}
                   alt={image.alt}
                 />
+                <p>{image.title}</p>
                 {favorited(image.id) ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -219,6 +221,7 @@ const Home: React.FC<ImagesProps> = ({
                   className={s.image}
                   alt={image.alt}
                 />
+                <p>{image.title}</p>
               </div>
             ))}
           </div>

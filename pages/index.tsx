@@ -10,6 +10,7 @@ import { authOptions } from "@/pages/api/auth/[...nextauth]";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
 import SearchBar from "@/components/Search/SearchBar";
+import { BoldBtn } from "@/components/Buttons/Buttons";
 
 import s from "@/styles/Home.module.css";
 
@@ -99,6 +100,13 @@ const Home: React.FC<ImagesProps> = ({
     return !!favoriteImages.find((id) => id === imageId);
   };
 
+  const routeToImageDetails = (imageId: string) => {
+    router.push(`/image/${imageId}`);
+  };
+
+  const routeToUpload = () => {
+    router.push(`/upload`);
+  };
 
   const routeToImageDetails = (imageId: number) => {
     router.push(`/image/${imageId}`)
@@ -126,14 +134,39 @@ const Home: React.FC<ImagesProps> = ({
       </Head>
       <main className={s.main}>
         {session && <SearchBar {...searchBarProps} />}
+        {session?.user.role === "ORG" && (
+          <div className={s.uploadBtn}>
+            <BoldBtn onClick={routeToUpload}>Upload images</BoldBtn>
+          </div>
+        )}
         <h1>Home</h1>
         {session !== null && <p>You are signed in as a {session.user.role}</p>}
+
         {session?.user.role === "ORG" && (
           <div className={s.collectionOuterContainer}>
             {displayedImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
-                <img src={image.url} className={s.image} alt={image.alt} />
-                <svg onClick={() => routeToUpdateForm(image.id)} xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
+                <img
+                  onClick={() => routeToImageDetails(image.id)}
+                  src={image.url}
+                  className={s.image}
+                  alt={image.alt}
+                />
+                <p>{image.title}</p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={s.favoriteIcon}
+                  width="23"
+                  height="23"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6eadf4"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+                </svg>
               </div>
             ))}
           </div>
@@ -142,7 +175,13 @@ const Home: React.FC<ImagesProps> = ({
           <div className={s.collectionOuterContainer}>
             {allImages.map((image) => (
               <div className={s.imageContainer} key={image.id}>
-                <img onClick={() => routeToImageDetails(image.id)} src={image.url} className={s.image} alt={image.alt} />
+                <img
+                  onClick={() => routeToImageDetails(image.id)}
+                  src={image.url}
+                  className={s.image}
+                  alt={image.alt}
+                />
+                <p>{image.title}</p>
                 {favorited(image.id) ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -184,7 +223,13 @@ const Home: React.FC<ImagesProps> = ({
           <div className={s.collectionOuterContainer}>
             {allImages.map((image) => (
               <div className={s.imageContainer} key={image.id}>
-                <img onClick={() => routeToImageDetails(image.id)} src={image.url} className={s.image} alt={image.alt} />
+                <img
+                  onClick={() => routeToImageDetails(image.id)}
+                  src={image.url}
+                  className={s.image}
+                  alt={image.alt}
+                />
+                <p>{image.title}</p>
               </div>
             ))}
           </div>

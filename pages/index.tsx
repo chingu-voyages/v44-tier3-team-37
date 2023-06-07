@@ -7,8 +7,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { Organization } from "@prisma/client";
-import Link from "next/link";
 import SearchBar from "@/components/Search/SearchBar";
 
 import s from "@/styles/Home.module.css";
@@ -38,6 +36,7 @@ interface ImagesProps {
   organizationImages?: Image[];
   userImages: Image[];
   tagsWithImages: TagWithImages[];
+  orgId: string;
 }
 
 const Home: React.FC<ImagesProps> = ({
@@ -45,6 +44,7 @@ const Home: React.FC<ImagesProps> = ({
   organizationImages,
   userImages,
   tagsWithImages,
+  orgId,
 }) => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -52,7 +52,7 @@ const Home: React.FC<ImagesProps> = ({
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
   );
-
+  const [selectedTags, setSelectedTags] = useState<TagWithImages[]>([]);
   const [initialImages, setInitialImages] = useState<Image[]>([]);
   const [displayedImages, setDisplayedImages] =
     useState<Image[]>(initialImages);
@@ -66,6 +66,41 @@ const Home: React.FC<ImagesProps> = ({
       setDisplayedImages(allImages);
     }
   }, [session?.user.role]);
+
+  const filterImages = (selectedTags: TagWithImages[]) => {
+    return selectedTags.map((tag) => tag.images).flat(Infinity) as Image[];
+  };
+
+  const removeDuplicates = (images: Image[]) => {
+    return images.reduce((acc, current) => {
+      const x = acc.find((item) => item.id === current.id);
+      if (!x) {
+        return acc.concat([current]);
+      } else {
+        return acc;
+      }
+    }, [] as Image[]);
+  };
+
+  const filterOrganizationImages = (images: Image[]) => {
+    return images.filter((image) => image.organizationId === orgId);
+  };
+
+  useEffect(() => {
+    if (selectedTags.length > 0) {
+      const filteredImages = filterImages(selectedTags);
+      const uniqueImages = removeDuplicates(filteredImages);
+      const results =
+        session?.user.role === "ORG"
+          ? filterOrganizationImages(uniqueImages)
+          : uniqueImages;
+      setDisplayedImages(results);
+      console.log(uniqueImages);
+      console.log(orgId);
+    } else {
+      setDisplayedImages(initialImages);
+    }
+  }, [selectedTags, session?.user.role]);
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -99,16 +134,17 @@ const Home: React.FC<ImagesProps> = ({
     return !!favoriteImages.find((id) => id === imageId);
   };
 
+  const routeToImageDetails = (imageId: string) => {
+    router.push(`/image/${imageId}`);
+  };
 
-  const routeToImageDetails = (imageId: number) => {
-    router.push(`/image/${imageId}`)
-  }
-    
   const searchBarProps = {
     initialImages,
     displayedImages,
     setDisplayedImages,
     tagsWithImages,
+    selectedTags,
+    setSelectedTags,
   };
   if (session === undefined) return <div>loading...</div>;
 
@@ -129,16 +165,34 @@ const Home: React.FC<ImagesProps> = ({
             {displayedImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
-                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className={s.favoriteIcon}
+                  width="23"
+                  height="23"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#6eadf4"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon>
+                </svg>
               </div>
             ))}
           </div>
         )}
         {session?.user.role === "USER" && (
           <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
+            {displayedImages.map((image) => (
               <div className={s.imageContainer} key={image.id}>
-                <img onClick={() => routeToImageDetails(image.id)} src={image.url} className={s.image} alt={image.alt} />
+                <img
+                  onClick={() => routeToImageDetails(image.id)}
+                  src={image.url}
+                  className={s.image}
+                  alt={image.alt}
+                />
                 {favorited(image.id) ? (
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -210,6 +264,18 @@ export async function getServerSideProps(context: {
   let allImages = await prisma.image.findMany();
   let organizationImages = null;
   let userImages = null;
+  let orgId = null;
+
+  if (session && session.user.role === "ORG") {
+    const org = await prisma.organization.findFirst({
+      where: {
+        user: {
+          id: session.user.id,
+        },
+      },
+    });
+    orgId = org?.id;
+  }
 
   if (session && session.user.role === "ORG") {
     const org = await prisma.organization.findFirst({
@@ -243,6 +309,7 @@ export async function getServerSideProps(context: {
       organizationImages,
       userImages,
       tagsWithImages,
+      orgId,
     },
   };
 }

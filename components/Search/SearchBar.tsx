@@ -1,5 +1,5 @@
 import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-
+import CustomSelect from "./Select";
 import { Image } from "@/pages/index";
 import { TagWithImages } from "@/pages/index";
 import { SearchIcon } from "./Icons";
@@ -10,6 +10,8 @@ type Props = {
   displayedImages: Image[];
   setDisplayedImages: React.Dispatch<React.SetStateAction<Image[]>>;
   tagsWithImages: TagWithImages[];
+  selectedTags: TagWithImages[];
+  setSelectedTags: React.Dispatch<React.SetStateAction<TagWithImages[]>>;
 };
 
 function SearchBar({
@@ -17,14 +19,22 @@ function SearchBar({
   displayedImages,
   setDisplayedImages,
   tagsWithImages,
+  selectedTags,
+  setSelectedTags,
 }: Props) {
   const [search, setSearch] = useState("");
-  const [selectedTags, setSelectedTags] = useState<TagWithImages[]>([]);
+
+  const filterBySearch = (images: Image[]) => {
+    return images.filter(
+      (image) =>
+        image.title.toLowerCase().includes(search) ||
+        image.description.toLowerCase().includes(search)
+    );
+  };
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const searchValue = e.target.value.toLowerCase();
     setSearch(searchValue);
-
     const results = initialImages.filter(
       (image) =>
         image.title.toLowerCase().includes(searchValue) ||
@@ -50,6 +60,7 @@ function SearchBar({
           placeholder="Search images..."
         />
       </div>
+      <CustomSelect tags={tagsWithImages} setSelectedTags={setSelectedTags} />
     </div>
   );
 }

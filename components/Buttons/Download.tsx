@@ -64,4 +64,5 @@ async function download(
   } catch (error) {
     console.error("Error downloading image", error);
   }
+  setIsDownloading(false);
 }

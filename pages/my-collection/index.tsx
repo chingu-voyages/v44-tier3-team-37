@@ -7,7 +7,6 @@ import { getServerSession } from "next-auth";
 import type { NextAuthOptions, Session } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
 
-import styles from '../../styles/userCollection.module.css';
 
 type Image = {
   id: string,

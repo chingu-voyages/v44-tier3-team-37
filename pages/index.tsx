@@ -103,6 +103,10 @@ const Home: React.FC<ImagesProps> = ({
   const routeToImageDetails = (imageId: number) => {
     router.push(`/image/${imageId}`)
   }
+
+  const routeToUpdateForm = (imageId: string) => {
+    router.push(`/update/${imageId}`)
+  }
     
   const searchBarProps = {
     initialImages,
@@ -129,7 +133,7 @@ const Home: React.FC<ImagesProps> = ({
             {displayedImages?.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img src={image.url} className={s.image} alt={image.alt} />
-                <svg xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
+                <svg onClick={() => routeToUpdateForm(image.id)} xmlns="http://www.w3.org/2000/svg" className={s.favoriteIcon} width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#6eadf4" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="16 3 21 8 8 21 3 21 3 16 16 3"></polygon></svg>
               </div>
             ))}
           </div>

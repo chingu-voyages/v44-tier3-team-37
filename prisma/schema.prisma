@@ -47,16 +47,17 @@ model User {
   sessions      Session[]
   role          Role          @default(NONE) @map("is_organization")
   organization  Organization?
+  images        Image[]
 
   @@map("users")
 }
 
 model Organization {
-  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  id          String         @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String
-  userId      String  @map("user_id") @db.ObjectId
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId      String         @map("user_id") @db.ObjectId
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   images      Image[]
 
   @@unique([userId])
@@ -75,6 +76,8 @@ model Image {
   tags           Tag[]         @relation(fields: [tagIds], references: [id])
   organization   Organization? @relation(fields: [organizationId], references: [id])
   organizationId String?       @map("organization_id") @db.ObjectId
+  userId         String?       @map("user_id") @db.ObjectId
+  user           User?         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@map("images")
 }

@@ -23,7 +23,9 @@ export const authOptions = {
             id: user.id,
           },
         });
-
+        if (!sessionUser) {
+          return session;
+        }
         // add id and role to session
         session.user.id = user.id;
         session.user.role = sessionUser?.role;

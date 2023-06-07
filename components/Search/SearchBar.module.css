@@ -1,0 +1,30 @@
+.container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 37px;
+    gap: .5em;
+}
+
+.searchBar {
+    background: var(--inputs);
+    border-radius: 0.8em;
+    position: relative;
+    display: flex;
+    align-items: center;
+
+}
+
+.icon {
+    display: flex;
+    align-items: center;
+    position: absolute;
+    height: 100%;
+    padding-inline: 1rem;
+
+}
+
+.searchBar input {
+    width: 100%;
+    padding-left: 4em !important;
+}

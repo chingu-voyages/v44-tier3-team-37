@@ -1,23 +1,15 @@
-.main {
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-  gap: 0.4em;
-  width: 100%;
-}
-
 .collectionOuterContainer {
   display: flex;
   justify-content: center;
   margin: 0 auto;
-  margin-top: 40px;
+  margin-top: 200px;
   max-width: 1300px;
   flex-wrap: wrap;
 }
 
 .imageContainer {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   max-width: 1200px;
@@ -31,27 +23,10 @@
   width: 240px;
 }
 
-.image:hover {
-  cursor: pointer;
-}
-
 .favoriteIcon {
   position: absolute;
   top: 0;
   right: 0;
   margin-top: 8px;
   margin-right: 8px;
-}
-
-.favoriteIcon:hover {
-  cursor: pointer;
-}
-
-.uploadBtn {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  height: 37px;
-  gap: 0.5em;
-  margin-top: 0.5em;
 }

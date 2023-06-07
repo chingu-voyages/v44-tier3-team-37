@@ -6,6 +6,7 @@
   gap: 0.4em;
   padding: 0.6em 2em;
   border: 1px solid #486284;
+  z-index: 2;
 }
 .header h1 {
   font-weight: 600;
@@ -21,4 +22,13 @@
 }
 .header a {
   font-size: 0.95em;
+}
+
+.logo {
+  height: 40px;
+}
+
+.logoDisplay {
+  display: flex;
+  justify-content: row;
 }

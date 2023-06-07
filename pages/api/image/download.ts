@@ -31,6 +31,6 @@ export default async function get(req: NextApiRequest, res: NextApiResponse) {
     res.status(200).json(url);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Error getting image data" });
+    res.status(500).json({ message: "Error creating signed URL" });
   }
 }

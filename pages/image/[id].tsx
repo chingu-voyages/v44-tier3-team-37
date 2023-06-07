@@ -7,10 +7,10 @@ import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import Download from "@/components/Buttons/Download";
 import { Organization } from "@prisma/client";
 import Link from "next/link";
 import styles from "../../styles/oneImage.module.css";
-
 import s from "@/styles/Home.module.css";
 
 type Image = {
@@ -143,6 +143,7 @@ const ImageDetails: React.FC<ImagesProps> = ({
                 <p className={styles.imageDetailsDescription}>
                   {image.description}
                 </p>
+                <Download image={image} />
               </div>
             </div>
           ))}

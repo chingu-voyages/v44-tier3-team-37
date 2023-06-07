@@ -7,11 +7,11 @@ import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
+import { Organization } from "@prisma/client";
 import Link from "next/link";
 import styles from "../../styles/oneImage.module.css";
 
 import s from "@/styles/Home.module.css";
-import { Btn } from "@/components/Buttons/Buttons";
 
 type Image = {
   id: string;
@@ -93,9 +93,6 @@ const ImageDetails: React.FC<ImagesProps> = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={s.main}>
-        <Link href={"/"}>
-          <Btn>Back</Btn>
-        </Link>
         <div className={styles.imageDetailsPage}>
           {imageFiltered.map((image) => (
             <div className={styles.imagePresentation} key={image.id}>

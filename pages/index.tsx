@@ -52,7 +52,6 @@ const Home: React.FC<ImagesProps> = ({
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
   );
-  const [selectedTags, setSelectedTags] = useState<TagWithImages[]>([]);
   const [initialImages, setInitialImages] = useState<Image[]>([]);
   const [displayedImages, setDisplayedImages] =
     useState<Image[]>(initialImages);
@@ -67,40 +66,7 @@ const Home: React.FC<ImagesProps> = ({
     }
   }, [session?.user.role]);
 
-  const filterImages = (selectedTags: TagWithImages[]) => {
-    return selectedTags.map((tag) => tag.images).flat(Infinity) as Image[];
-  };
-
-  const removeDuplicates = (images: Image[]) => {
-    return images.reduce((acc, current) => {
-      const x = acc.find((item) => item.id === current.id);
-      if (!x) {
-        return acc.concat([current]);
-      } else {
-        return acc;
-      }
-    }, [] as Image[]);
-  };
-
-  const filterOrganizationImages = (images: Image[]) => {
-    return images.filter((image) => image.organizationId === orgId);
-  };
-
-  useEffect(() => {
-    if (selectedTags.length > 0) {
-      const filteredImages = filterImages(selectedTags);
-      const uniqueImages = removeDuplicates(filteredImages);
-      const results =
-        session?.user.role === "ORG"
-          ? filterOrganizationImages(uniqueImages)
-          : uniqueImages;
-      setDisplayedImages(results);
-      console.log(uniqueImages);
-      console.log(orgId);
-    } else {
-      setDisplayedImages(initialImages);
-    }
-  }, [selectedTags, session?.user.role]);
+  if (session === undefined) return <div>loading...</div>;
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -143,10 +109,7 @@ const Home: React.FC<ImagesProps> = ({
     displayedImages,
     setDisplayedImages,
     tagsWithImages,
-    selectedTags,
-    setSelectedTags,
   };
-  if (session === undefined) return <div>loading...</div>;
 
   return (
     <>

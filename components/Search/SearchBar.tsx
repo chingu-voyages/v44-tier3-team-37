@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import CustomSelect from "./Select";
 import { Image } from "@/pages/index";
 import { TagWithImages } from "@/pages/index";
@@ -7,45 +7,59 @@ import s from "./SearchBar.module.css";
 
 type Props = {
   initialImages: Image[];
-  displayedImages: Image[];
   setDisplayedImages: React.Dispatch<React.SetStateAction<Image[]>>;
   tagsWithImages: TagWithImages[];
-  selectedTags: TagWithImages[];
-  setSelectedTags: React.Dispatch<React.SetStateAction<TagWithImages[]>>;
 };
 
 function SearchBar({
   initialImages,
-  displayedImages,
   setDisplayedImages,
   tagsWithImages,
-  selectedTags,
-  setSelectedTags,
 }: Props) {
   const [search, setSearch] = useState("");
+  const [selectedTags, setSelectedTags] = useState<TagWithImages[]>([]);
 
-  const filterBySearch = (images: Image[]) => {
-    return images.filter(
-      (image) =>
-        image.title.toLowerCase().includes(search) ||
-        image.description.toLowerCase().includes(search)
-    );
+  // Helper function to find unique images
+  const findUniqueImages = (images: Image[]) => {
+    const uniqueImages: Image[] = [];
+    const imageIds = new Set();
+
+    images.forEach((image) => {
+      if (!imageIds.has(image.id)) {
+        uniqueImages.push(image);
+        imageIds.add(image.id);
+      }
+    });
+
+    return uniqueImages;
   };
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const searchValue = e.target.value.toLowerCase();
-    setSearch(searchValue);
-    const results = initialImages.filter(
-      (image) =>
-        image.title.toLowerCase().includes(searchValue) ||
-        image.description.toLowerCase().includes(searchValue)
-    );
-    if (search.length === 0) {
-      setDisplayedImages(initialImages);
+  // Whenever initialImages, search, or selectedTags changes, we recalculate the displayedImages
+  useEffect(() => {
+    let filteredByTags: Image[] = [];
+
+    if (selectedTags.length > 0) {
+      selectedTags.forEach((tag) => {
+        filteredByTags = filteredByTags.concat(tag.images);
+      });
+      filteredByTags = findUniqueImages(filteredByTags);
+      filteredByTags = filteredByTags.filter((image) =>
+        initialImages.some((initImage) => initImage.id === image.id)
+      );
     } else {
-      setDisplayedImages(results);
+      filteredByTags = initialImages;
     }
-  };
+
+    if (search !== "") {
+      const searchLower = search.toLowerCase();
+      filteredByTags = filteredByTags.filter(
+        (image) =>
+          image.title.toLowerCase().includes(searchLower) ||
+          image.description.toLowerCase().includes(searchLower)
+      );
+    }
+    setDisplayedImages(findUniqueImages(filteredByTags));
+  }, [initialImages, search, selectedTags]);
 
   return (
     <div className={s.container}>
@@ -54,7 +68,7 @@ function SearchBar({
           <SearchIcon />
         </div>
         <input
-          onChange={handleChange}
+          onChange={(e) => setSearch(e.target.value)}
           value={search}
           type="text"
           placeholder="Search images..."

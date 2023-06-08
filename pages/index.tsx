@@ -7,8 +7,6 @@ import { NextApiRequest, NextApiResponse } from "next";
 import type { NextAuthOptions, Session } from "next-auth";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/pages/api/auth/[...nextauth]";
-import { Organization } from "@prisma/client";
-import Link from "next/link";
 import SearchBar from "@/components/Search/SearchBar";
 import { BoldBtn } from "@/components/Buttons/Buttons";
 
@@ -39,6 +37,7 @@ interface ImagesProps {
   organizationImages?: Image[];
   userImages: Image[];
   tagsWithImages: TagWithImages[];
+  orgId: string;
 }
 
 const Home: React.FC<ImagesProps> = ({
@@ -46,6 +45,7 @@ const Home: React.FC<ImagesProps> = ({
   organizationImages,
   userImages,
   tagsWithImages,
+  orgId,
 }) => {
   const router = useRouter();
   const { data: session } = useSession();
@@ -53,7 +53,6 @@ const Home: React.FC<ImagesProps> = ({
   const [favoriteImages, setFavoriteImages] = useState<string[]>(
     userImages ? userImages?.map((image) => image.id) : []
   );
-
   const [initialImages, setInitialImages] = useState<Image[]>([]);
   const [displayedImages, setDisplayedImages] =
     useState<Image[]>(initialImages);
@@ -67,6 +66,8 @@ const Home: React.FC<ImagesProps> = ({
       setDisplayedImages(allImages);
     }
   }, [session?.user.role]);
+
+  if (session === undefined) return <div>loading...</div>;
 
   // if user role is NONE, route to onboarding form
   if (session?.user?.role == "NONE") {
@@ -108,21 +109,16 @@ const Home: React.FC<ImagesProps> = ({
     router.push(`/upload`);
   };
 
-  const routeToImageDetails = (imageId: number) => {
-    router.push(`/image/${imageId}`)
-  }
-
   const routeToUpdateForm = (imageId: string) => {
-    router.push(`/update/${imageId}`)
-  }
-    
+    router.push(`/update/${imageId}`);
+  };
+
   const searchBarProps = {
     initialImages,
     displayedImages,
     setDisplayedImages,
     tagsWithImages,
   };
-  if (session === undefined) return <div>loading...</div>;
 
   return (
     <>
@@ -173,7 +169,7 @@ const Home: React.FC<ImagesProps> = ({
         )}
         {session?.user.role === "USER" && (
           <div className={s.collectionOuterContainer}>
-            {allImages.map((image) => (
+            {displayedImages.map((image) => (
               <div className={s.imageContainer} key={image.id}>
                 <img
                   onClick={() => routeToImageDetails(image.id)}
@@ -259,6 +255,18 @@ export async function getServerSideProps(context: {
   let allImages = await prisma.image.findMany();
   let organizationImages = null;
   let userImages = null;
+  let orgId = null;
+
+  if (session && session.user.role === "ORG") {
+    const org = await prisma.organization.findFirst({
+      where: {
+        user: {
+          id: session.user.id,
+        },
+      },
+    });
+    orgId = org?.id;
+  }
 
   if (session && session.user.role === "ORG") {
     const org = await prisma.organization.findFirst({
@@ -292,9 +300,9 @@ export async function getServerSideProps(context: {
       organizationImages,
       userImages,
       tagsWithImages,
+      orgId,
     },
   };
 }
-
 
 export default Home;

@@ -11,27 +11,32 @@ export default async function handle(
   const session = await getServerSession(req, res, authOptions);
 
   if (session) {
-    try {
-      const deleteUser = await prisma.user.delete({
-        where: {
-          id: session.user?.id,
-        },
-      });
-      res.status(204).send({ message: "Account successfully deleted" });
-    } catch (error) {
-      res.status(405).send(error);
+    if (!isOrg) {
+      try {
+        const deleteUser = await prisma.user.delete({
+          where: {
+            id: session.user?.id,
+          },
+        });
+        res.status(204).send({ message: "Account successfully deleted" });
+        return;
+      } catch (error) {
+        res.status(405).send(error);
+      }
     }
-  }
-  if (isOrg) {
-    try {
-      const deleteOrgImage = await prisma.image.delete({
-        where: {
-          id: session.user?.id,
-        },
-      });
-      res.status(204).send({ message: "Images successfully deleted" });
-    } catch (error) {
-      res.status(405).send(error);
+    if (isOrg) {
+      try {
+        const deleteOrgAndImages = await prisma.user.delete({
+          where: {
+            id: session.user?.id,
+          },
+        });
+        res
+          .status(204)
+          .send({ message: "Organization and images successfully deleted" });
+      } catch (error) {
+        res.status(405).send(error);
+      }
     }
   } else {
     res.status(401).send({ message: "Unauthorized" });

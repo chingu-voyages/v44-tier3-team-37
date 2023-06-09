@@ -81,7 +81,7 @@ export default function Account({
           content="Find and collect historical images."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/image-vault-logo-dall-e.png" />
       </Head>
       <div className={styles.account}>
         {data.session.user.role != "ORG" ? (

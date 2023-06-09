@@ -45,7 +45,7 @@ export default function NewUser() {
           content="Find and collect historical images."
         />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/image-vault-logo-dall-e.png" />
       </Head>
       <div className={styles.onboarding}>
         <h2>Welcome to Image Vault</h2>

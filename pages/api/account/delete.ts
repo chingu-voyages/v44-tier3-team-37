@@ -19,7 +19,12 @@ export default async function handle(
           },
         });
         res.status(204).send({ message: "Account successfully deleted" });
-        return;
+        return {
+          // if we do not have a session - send to signin page
+          redirect: {
+            destination: "api/auth/signin",
+          },
+        };
       } catch (error) {
         res.status(405).send(error);
       }
@@ -34,6 +39,12 @@ export default async function handle(
         res
           .status(204)
           .send({ message: "Organization and images successfully deleted" });
+        return {
+          // if we do not have a session - send to signin page
+          redirect: {
+            destination: "api/auth/signin",
+          },
+        };
       } catch (error) {
         res.status(405).send(error);
       }

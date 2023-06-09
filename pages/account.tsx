@@ -1,5 +1,5 @@
 import { useState } from "react";
-
+import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import type {
@@ -74,6 +74,7 @@ export default function Account({
     } catch (error) {
       console.error(error);
     }
+    signIn();
   };
 
   if (!data) {

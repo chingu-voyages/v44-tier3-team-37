@@ -2,7 +2,7 @@ import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
-// import { useS3Upload } from "next-s3-upload";
+import { useS3Upload } from "next-s3-upload";
 import styles from "@/styles/New-user.module.css";
 import { Btn } from "@/components/Buttons/Buttons";
 import Dropzone from "@/components/Upload/Dropzone";
@@ -15,7 +15,7 @@ export default function NewUser() {
   // banner image
   const [files, setFiles] = useState<File[]>([]);
   const [preview, setPreview] = useState("");
-  // const { uploadToS3 } = useS3Upload();
+  const { uploadToS3 } = useS3Upload();
 
   // form data
   const [isOrg, setIsOrg] = useState(false);
@@ -30,8 +30,7 @@ export default function NewUser() {
 
     try {
       // upload image to S3 bucket
-      // const { url } = await uploadToS3(files[0]);
-      const url = "https://fakeimg.pl/680x120/6BCFF6/";
+      const { url } = await uploadToS3(files[0]);
       const body = { isOrg, url, orgName, orgDesc };
       await fetch(`/api/account/onboarding`, {
         method: "POST",

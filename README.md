@@ -4,7 +4,7 @@ A place for museums, archives, and cultural organizations to share their collect
 
 - Sign up as an organization to share media
 - Join as a user to collect and download interesting historical images
-- Search and filter the catalog by date, location, organization, and more.
+- Search and filter the catalog by image name, tags, and more.
 
 Currently being developed by [@LucileTech](https://github.com/LucileTech), [@FlapShatner](https://github.com/FlapShatner), [@jameswonlee](https://github.com/jameswonlee), and [@dejmedus](https://github.com/dejmedus) as part of an agile process with [Chingu voyages](https://www.chingu.io/)!
 
@@ -15,6 +15,7 @@ Currently being developed by [@LucileTech](https://github.com/LucileTech), [@Fla
 - [NextAuth.js](https://next-auth.js.org/) & Google OAuth
 - [Prisma](https://www.prisma.io/)
 - [MongoDB](https://www.mongodb.com/)
+- [AWS S3](https://aws.amazon.com/s3/)
 - CSS
 
 ### Local Setup

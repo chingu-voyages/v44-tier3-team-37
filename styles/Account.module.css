@@ -8,6 +8,11 @@
   width: 600px;
   max-width: 90vw;
 }
+.imageContainer {
+  height: 120px;
+  width: 680px;
+  overflow: hidden;
+}
 .btnContainer {
   display: flex;
   gap: 1em;

@@ -147,12 +147,12 @@ export default function Account({
         ) : (
           <div className={styles.container}>
             {data?.organization?.banner ? (
-              <Image
-                src={data?.organization?.banner}
-                alt={`${orgName} banner`}
-                height={120}
-                width={680}
-              />
+              <div className={styles.imageContainer}>
+                <img
+                  src={data?.organization?.banner}
+                  alt={`${orgName} banner`}
+                />
+              </div>
             ) : null}
             <h2>{orgName}</h2>
             <p>{orgDesc}</p>

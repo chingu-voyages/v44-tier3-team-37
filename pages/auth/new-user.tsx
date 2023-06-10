@@ -45,6 +45,7 @@ export default function NewUser() {
       setIsLoading(false);
       alert("Error creating account.");
       setFiles([]);
+      setPreview("");
       console.error(error);
     }
   };

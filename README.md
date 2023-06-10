@@ -1,6 +1,14 @@
+
+
+
 ## Image Vault
 
 A place for museums, archives, and cultural organizations to share their collections.
+
+<p float="left">
+ <img src="https://res.cloudinary.com/dsioshcio/image/upload/v1686273784/Screenshot_2023-06-08_at_10.38.43_xuw7tk.png" width="400px"/>
+ <img src="https://res.cloudinary.com/dsioshcio/image/upload/v1686273766/Screenshot_2023-06-08_at_10.34.27_gytq7t.png" width="130px"/>
+</p>
 
 - Sign up as an organization to share media
 - Join as a user to collect and download interesting historical images

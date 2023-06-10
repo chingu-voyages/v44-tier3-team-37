@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import type {
   InferGetServerSidePropsType,
   NextApiRequest,
@@ -25,6 +26,7 @@ import {
 export default function Account({
   data,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const orgImagesTotal = data?.organization?.orgCollectionLength;
   const [orgName, setOrgName] = useState(data?.organization?.orgName);
   const [orgDesc, setOrgDesc] = useState(data?.organization?.orgDesc);
   const [isEditing, setIsEditing] = useState(false);
@@ -123,8 +125,24 @@ export default function Account({
           </form>
         ) : (
           <div className={styles.container}>
+            {data?.organization?.banner ? (
+              <Image
+                src={data?.organization?.banner}
+                alt={`${orgName} banner`}
+                height={120}
+                width={680}
+              />
+            ) : null}
             <h2>{orgName}</h2>
             <p>{orgDesc}</p>
+            <p className={styles.emphasis}>
+              {orgImagesTotal === 0
+                ? "No images"
+                : orgImagesTotal == 1
+                ? "1 image"
+                : `${orgImagesTotal} images`}{" "}
+              in collection
+            </p>
             <div className={styles.btnContainer}>
               <OutlineWarningBtn>Delete Account</OutlineWarningBtn>
               <Btn onClick={() => setIsEditing(true)}>Update</Btn>
@@ -142,6 +160,7 @@ type AccountData = {
     orgName: string;
     orgDesc: string;
     orgCollectionLength?: number;
+    banner?: string;
   };
   session: Session;
 };
@@ -184,6 +203,9 @@ export async function getServerSideProps(context: {
         id: session.user.id,
       },
     },
+    include: {
+      images: true,
+    },
   });
 
   // if we have a session with org role and organization object - return org data and session
@@ -192,6 +214,8 @@ export async function getServerSideProps(context: {
       organization: {
         orgName: org.name,
         orgDesc: org.description,
+        orgCollectionLength: org.images.length || 0,
+        banner: org.banner,
       },
       session: session,
     };

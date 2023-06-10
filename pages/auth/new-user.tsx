@@ -2,14 +2,22 @@ import { useState } from "react";
 import Head from "next/head";
 import { useRouter } from "next/router";
 import { useSession } from "next-auth/react";
+import { useS3Upload } from "next-s3-upload";
 import styles from "@/styles/New-user.module.css";
 import { Btn } from "@/components/Buttons/Buttons";
+import Dropzone from "@/components/Upload/Dropzone";
 import LoadingSpinner from "@/components/Loading/LoadingSpinner";
 
 export default function NewUser() {
   const { data: session, update } = useSession();
   const router = useRouter();
 
+  // banner image
+  const [files, setFiles] = useState<File[]>([]);
+  const [preview, setPreview] = useState("");
+  const { uploadToS3 } = useS3Upload();
+
+  // form data
   const [isOrg, setIsOrg] = useState(false);
   const [orgName, setOrgName] = useState("");
   const [orgDesc, setOrgDesc] = useState("");
@@ -21,7 +29,9 @@ export default function NewUser() {
     setIsLoading(true);
 
     try {
-      const body = { isOrg, orgName, orgDesc };
+      // upload image to S3 bucket
+      const { url } = await uploadToS3(files[0]);
+      const body = { isOrg, url, orgName, orgDesc };
       await fetch(`/api/account/onboarding`, {
         method: "POST",
         headers: {
@@ -32,6 +42,10 @@ export default function NewUser() {
       await update({ role: isOrg ? "ORG" : "USER" });
       await router.push("/");
     } catch (error) {
+      setIsLoading(false);
+      alert("Error creating account.");
+      setFiles([]);
+      setPreview("");
       console.error(error);
     }
   };
@@ -89,11 +103,23 @@ export default function NewUser() {
                 cols={30}
                 rows={8}
               ></textarea>
+              <label htmlFor="banner">Banner Image [120x680]</label>
+              <div className={styles.dropZone}>
+                <Dropzone
+                  setFiles={setFiles}
+                  setPreview={setPreview}
+                  preview={preview}
+                />
+              </div>
             </>
           ) : null}
           <Btn
             type="submit"
-            disabled={isLoading || (isOrg && (!orgName || !orgDesc))}
+            disabled={
+              isLoading ||
+              (isOrg && (!orgName || !orgDesc)) ||
+              (files.length > 0 && !preview)
+            }
           >
             {isOrg ? "Submit" : "Continue"}
           </Btn>

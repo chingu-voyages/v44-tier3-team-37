@@ -7,7 +7,7 @@ export default async function handle(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { isOrg, orgName, orgDesc } = req.body;
+  const { isOrg, url, orgName, orgDesc } = req.body;
   const session = await getServerSession(req, res, authOptions);
 
   if (session) {
@@ -24,6 +24,7 @@ export default async function handle(
               create: {
                 name: orgName,
                 description: orgDesc,
+                banner: url,
               },
             },
           },

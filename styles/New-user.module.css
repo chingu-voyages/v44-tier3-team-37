@@ -18,6 +18,12 @@
   justify-self: center;
   margin-top: 1em;
 }
+.dropZone {
+  width: 100%;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
 
 /* radio - uiverse.io @ https://uiverse.io/Yaya12085/rude-mouse-79 */
 .radio {

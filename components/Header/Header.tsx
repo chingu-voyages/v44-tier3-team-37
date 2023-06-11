@@ -31,10 +31,18 @@ function Header() {
       <nav>
         <ul>
           {session && currentPath !== "/auth/new-user" ? (
-            <li>
-              <Link href="/account">Account</Link>
-            </li>
+            <>
+              {session.user.role == "USER" ? (
+                <li>
+                  <Link href="/my-collection">Collection</Link>
+                </li>
+              ) : null}
+              <li>
+                <Link href="/account">Account</Link>
+              </li>
+            </>
           ) : null}
+
           {currentPath !== "/auth/new-user" ? (
             <li>
               <BoldBtn onClick={handleClick}>

@@ -30,7 +30,13 @@ export default function NewUser() {
 
     try {
       // upload image to S3 bucket
-      const { url } = await uploadToS3(files[0]);
+      let url = "";
+      if (isOrg && files.length > 0) {
+        const upload = await uploadToS3(files[0]);
+        if (upload) {
+          url = upload.url;
+        }
+      }
       const body = { isOrg, url, orgName, orgDesc };
       await fetch(`/api/account/onboarding`, {
         method: "POST",
@@ -87,14 +93,14 @@ export default function NewUser() {
 
           {isOrg ? (
             <>
-              <label htmlFor="name">Organization name</label>
+              <label htmlFor="name">Organization name*</label>
               <input
                 id="name"
                 onChange={(e) => setOrgName(e.target.value)}
                 value={orgName}
                 type="text"
               />
-              <label htmlFor="desc">Tell us about your organization</label>
+              <label htmlFor="desc">Tell us about your organization*</label>
               <textarea
                 onChange={(e) => setOrgDesc(e.target.value)}
                 value={orgDesc}
